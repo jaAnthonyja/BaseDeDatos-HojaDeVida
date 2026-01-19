@@ -1,0 +1,537 @@
+/* ========== RESET Y BASE ========== */
+:root {
+    --pink: #FF1493;
+    --cyan: #00CED1;
+    --yellow: #FFD700;
+    --purple: #9370DB;
+    --orange: #FF8C00;
+    --blue: #4169E1;
+    --green: #32CD32;
+    --bg-purple: #7B68EE;
+    --dark-border: #2C2C2C;
+    --white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    background: linear-gradient(135deg, #7B68EE 0%, #6A5ACD 100%);
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body {
+    padding: 20px;
+}
+
+/* ========== VENTANA ESTILO BROWSER ========== */
+.window-container {
+    background: var(--white);
+    border: 5px solid var(--dark-border);
+    border-radius: 8px;
+    box-shadow: 
+        8px 8px 0px rgba(0, 0, 0, 0.3),
+        12px 12px 0px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 50px auto;
+    overflow: hidden;
+    animation: windowAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes windowAppear {
+    0% {
+        transform: scale(0.8) translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ========== BARRA SUPERIOR DE VENTANA ========== */
+.window-header {
+    background: var(--pink);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--dark-border);
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.window-control {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--dark-border);
+    border-radius: 50%;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.window-control.close { background: #FF5F56; }
+.window-control.minimize { background: #FFBD2E; }
+.window-control.maximize { background: #27C93F; }
+
+.window-control:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.window-title {
+    color: var(--white);
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* ========== CONTENIDO DE VENTANA ========== */
+.window-body {
+    padding: 30px;
+    background: var(--white);
+}
+
+/* ========== PÁGINA DE LOGIN ========== */
+#login-form {
+    background: transparent;
+}
+
+.login-container {
+    position: relative;
+}
+
+/* Logo/Icono de carpeta */
+.login-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: var(--yellow);
+    border: 4px solid var(--dark-border);
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+/* Título de login */
+.login-title {
+    text-align: center;
+    color: var(--dark-border);
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 25px 0;
+    text-transform: uppercase;
+}
+
+/* ========== LABELS ========== */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--dark-border);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+/* ========== INPUTS ========== */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 3px solid var(--dark-border);
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+    background: var(--white);
+    font-family: 'Arial', sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 206, 209, 0.2);
+    transform: translateY(-2px);
+    background: #f9f9ff;
+}
+
+/* ========== BOTONES ========== */
+button,
+input[type="submit"],
+.button,
+.submit-row input,
+a.button {
+    background: var(--cyan);
+    color: var(--white);
+    border: 4px solid var(--dark-border);
+    padding: 12px 30px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    display: inline-block;
+}
+
+button:hover,
+input[type="submit"]:hover,
+a.button:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+    background: var(--pink);
+}
+
+button:active,
+input[type="submit"]:active,
+a.button:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.submit-row {
+    text-align: center;
+}
+
+.submit-row input {
+    width: auto;
+    margin: 0;
+}
+
+/* ========== DASHBOARD DEL ADMIN ========== */
+#content-main {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Módulos del dashboard */
+.module {
+    background: var(--white);
+    border: 5px solid var(--dark-border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.module h2 {
+    background: var(--purple);
+    color: var(--white);
+    padding: 15px 20px;
+    margin: 0;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 4px solid var(--dark-border);
+}
+
+.module table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.module td,
+.module th {
+    padding: 12px 20px;
+    border-bottom: 2px solid #f0f0f0;
+    text-align: left;
+}
+
+.module th {
+    background: rgba(0, 206, 209, 0.1);
+    font-weight: bold;
+}
+
+.module tr:hover {
+    background: rgba(123, 104, 238, 0.1);
+}
+
+/* ========== LINKS ========== */
+a {
+    color: var(--blue);
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+a:hover {
+    color: var(--pink);
+    text-decoration: underline;
+}
+
+/* ========== ICONOS DE ACCIONES ========== */
+.addlink,
+.changelink,
+.deletelink,
+.viewsitelink {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    border: 2px solid var(--dark-border);
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.addlink {
+    background: var(--green);
+    color: var(--white);
+    border-color: var(--dark-border);
+}
+
+.changelink {
+    background: var(--cyan);
+    color: var(--white);
+    border-color: var(--dark-border);
+}
+
+.deletelink {
+    background: var(--pink);
+    color: var(--white);
+    border-color: var(--dark-border);
+}
+
+.viewsitelink {
+    background: var(--orange);
+    color: var(--white);
+    border-color: var(--dark-border);
+}
+
+.addlink:hover,
+.changelink:hover,
+.deletelink:hover,
+.viewsitelink:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ========== MENSAJES DE ÉXITO/ERROR ========== */
+.messagelist {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.messagelist li {
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border: 4px solid var(--dark-border);
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+}
+
+.messagelist li::before {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.success {
+    background: var(--green);
+    color: var(--white);
+}
+
+.success::before {
+    content: '✓';
+}
+
+.error {
+    background: var(--pink);
+    color: var(--white);
+}
+
+.error::before {
+    content: '✕';
+}
+
+.warning {
+    background: var(--orange);
+    color: var(--white);
+}
+
+.warning::before {
+    content: '⚠';
+}
+
+.info {
+    background: var(--blue);
+    color: var(--white);
+}
+
+.info::before {
+    content: 'ℹ';
+}
+
+/* ========== BREADCRUMBS ========== */
+.breadcrumbs {
+    background: var(--yellow);
+    border: 4px solid var(--dark-border);
+    border-radius: 4px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.breadcrumbs a {
+    color: var(--dark-border);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.breadcrumbs a:hover {
+    color: var(--purple);
+    text-decoration: underline;
+}
+
+/* ========== TABLAS ========== */
+#result_list {
+    border: 5px solid var(--dark-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+#result_list thead th {
+    background: var(--cyan);
+    color: var(--white);
+    border-bottom: 4px solid var(--dark-border);
+    padding: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#result_list tbody tr:nth-child(odd) {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+#result_list tbody tr:hover {
+    background: rgba(0, 206, 209, 0.15);
+}
+
+#result_list td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* ========== VENTANAS MÚLTIPLES (dashboard) ========== */
+.dashboard-windows {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.dashboard-window {
+    background: var(--white);
+    border: 5px solid var(--dark-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard-window:hover {
+    transform: translate(-6px, -6px);
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-window:nth-child(1) .window-header { background: var(--pink); }
+.dashboard-window:nth-child(2) .window-header { background: var(--cyan); }
+.dashboard-window:nth-child(3) .window-header { background: var(--yellow); color: var(--dark-border); }
+.dashboard-window:nth-child(4) .window-header { background: var(--purple); }
+.dashboard-window:nth-child(5) .window-header { background: var(--orange); }
+.dashboard-window:nth-child(6) .window-header { background: var(--blue); }
+.dashboard-window:nth-child(7) .window-header { background: var(--green); }
+
+.dashboard-window .window-body {
+    padding: 20px;
+}
+
+.dashboard-window .window-body a {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid var(--dark-border);
+    border-radius: 4px;
+    background: rgba(123, 104, 238, 0.05);
+    color: var(--dark-border);
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.dashboard-window .window-body a:hover {
+    background: rgba(123, 104, 238, 0.15);
+    transform: translateX(5px);
+}
+
+/* ========== CURSOR PERSONALIZADO ========== */
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M2 2l8 16-4 8 8-4 16-8z" fill="white" stroke="black" stroke-width="1.5"/></svg>') 2 2, auto;
+}
+
+a, button, input[type="submit"], .button {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M16 2l4 10h10l-8 6 3 10-9-7-9 7 3-10-8-6h10z" fill="gold" stroke="black" stroke-width="1.5"/></svg>') 10 2, pointer;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .window-container {
+        margin: 20px;
+        max-width: 100%;
+    }
+    
+    .dashboard-windows {
+        grid-template-columns: 1fr;
+    }
+    
+    body {
+        padding: 10px;
+    }
+}

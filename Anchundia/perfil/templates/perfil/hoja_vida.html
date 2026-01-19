@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ perfil.nombres }} {{ perfil.apellidos }} - CV</title>
+    <link rel="stylesheet" href="{% static 'css/modern-cv-style.css' %}">
+</head>
+<body>
+    <!-- Fondo con cuadrícula 3D -->
+    <div class="grid-background"></div>
+    
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- HEADER / PERFIL -->
+        <header class="fade-in">
+            <h1>{{ perfil.nombres }} {{ perfil.apellidos }}</h1>
+            {% if perfil.descripcionperfil %}
+                <p class="text-gray">{{ perfil.descripcionperfil }}</p>
+            {% endif %}
+        </header>
+
+        <!-- DATOS PERSONALES -->
+        <section class="card slide-in-left">
+            <div class="section-title">Datos Personales</div>
+            <ul>
+                {% if perfil.nacionalidad %}<li><strong>Nacionalidad:</strong> <span>{{ perfil.nacionalidad }}</span></li>{% endif %}
+                {% if perfil.lugarnacimiento %}<li><strong>Lugar de nacimiento:</strong> <span>{{ perfil.lugarnacimiento }}</span></li>{% endif %}
+                {% if perfil.fechanacimiento %}<li><strong>Fecha de nacimiento:</strong> <span>{{ perfil.fechanacimiento|date:"d M Y" }}</span></li>{% endif %}
+                {% if perfil.numerocedula %}<li><strong>Cédula:</strong> <span>{{ perfil.numerocedula }}</span></li>{% endif %}
+                {% if perfil.sexo %}<li><strong>Sexo:</strong> <span>{{ perfil.sexo }}</span></li>{% endif %}
+                {% if perfil.estadocivil %}<li><strong>Estado civil:</strong> <span>{{ perfil.estadocivil }}</span></li>{% endif %}
+                {% if perfil.licenciaconducir %}<li><strong>Licencia:</strong> <span>{{ perfil.licenciaconducir }}</span></li>{% endif %}
+                {% if perfil.telefonoconvencional %}<li><strong>Tel. Convencional:</strong> <span>{{ perfil.telefonoconvencional }}</span></li>{% endif %}
+                {% if perfil.telefonofijo %}<li><strong>Tel. Fijo:</strong> <span>{{ perfil.telefonofijo }}</span></li>{% endif %}
+                {% if perfil.direcciontrabajo %}<li><strong>Dirección trabajo:</strong> <span>{{ perfil.direcciontrabajo }}</span></li>{% endif %}
+                {% if perfil.direcciondomiciliaria %}<li><strong>Dirección domicilio:</strong> <span>{{ perfil.direcciondomiciliaria }}</span></li>{% endif %}
+                {% if perfil.sitioweb %}<li><strong>Sitio web:</strong> <a href="{{ perfil.sitioweb }}" target="_blank">{{ perfil.sitioweb }}</a></li>{% endif %}
+            </ul>
+        </section>
+
+        <!-- EXPERIENCIA LABORAL -->
+        <section class="card slide-in-left">
+            <div class="section-title">Experiencia Laboral</div>
+            {% if experiencias.exists %}
+                <ul>
+                    {% for e in experiencias %}
+                        <li>
+                            <strong>{% if e.cargodesempenado %}{{ e.cargodesempenado }}{% endif %}</strong>
+                            {% if e.nombrempresa %}<div><strong>Empresa:</strong> {{ e.nombrempresa }}</div>{% endif %}
+                            <div>
+                                {% if e.fechainiciogestion %}<strong>Desde:</strong> {{ e.fechainiciogestion|date:"M Y" }}{% endif %}
+                                {% if e.fechafingestion %} <strong>Hasta:</strong> {{ e.fechafingestion|date:"M Y" }}{% endif %}
+                            </div>
+                            {% if e.descripcionfunciones %}<p>{{ e.descripcionfunciones }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay experiencia laboral registrada.</p>
+            {% endif %}
+        </section>
+
+        <!-- CURSOS REALIZADOS -->
+        <section class="card slide-in-left">
+            <div class="section-title">Cursos Realizados</div>
+            {% if cursos.exists %}
+                <ul>
+                    {% for c in cursos %}
+                        <li>
+                            <strong>{{ c.nombrecurso }}</strong>
+                            {% if c.entidadpatrocinadora %}<div><strong>Entidad:</strong> {{ c.entidadpatrocinadora }}</div>{% endif %}
+                            <div>
+                                {% if c.fechainicio %}<strong>Inicio:</strong> {{ c.fechainicio|date:"M Y" }}{% endif %}
+                                {% if c.fechafin %} <strong>Fin:</strong> {{ c.fechafin|date:"M Y" }}{% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay cursos registrados.</p>
+            {% endif %}
+        </section>
+
+        <!-- RECONOCIMIENTOS -->
+        <section class="card slide-in-left">
+            <div class="section-title">Reconocimientos</div>
+            {% if reconocimientos.exists %}
+                <ul>
+                    {% for r in reconocimientos %}
+                        <li>
+                            <strong>{{ r.tiporeconocimiento }}{% if r.descripcionreconocimiento %} - {{ r.descripcionreconocimiento }}{% endif %}</strong>
+                            {% if r.entidadpatrocinadora %}<div><strong>Entidad:</strong> {{ r.entidadpatrocinadora }}</div>{% endif %}
+                            {% if r.fechareconocimiento %}<div><strong>Fecha:</strong> {{ r.fechareconocimiento|date:"d M Y" }}</div>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay reconocimientos registrados.</p>
+            {% endif %}
+        </section>
+
+        <!-- PRODUCTOS ACADÉMICOS -->
+        <section class="card slide-in-left">
+            <div class="section-title">Productos Académicos</div>
+            {% if productos_acad.exists %}
+                <ul>
+                    {% for p in productos_acad %}
+                        <li>
+                            <strong>{{ p.nombrerecurso }}</strong>
+                            {% if p.clasificador %}<div><strong>Clasificador:</strong> {{ p.clasificador }}</div>{% endif %}
+                            {% if p.descripcion %}<p>{{ p.descripcion }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay productos académicos registrados.</p>
+            {% endif %}
+        </section>
+
+        <!-- PRODUCTOS LABORALES -->
+        <section class="card slide-in-left">
+            <div class="section-title">Productos Laborales</div>
+            {% if productos_lab.exists %}
+                <ul>
+                    {% for pl in productos_lab %}
+                        <li>
+                            <strong>{{ pl.nombreproducto }}</strong>
+                            {% if pl.fechaproducto %}<div><strong>Fecha:</strong> {{ pl.fechaproducto|date:"d M Y" }}</div>{% endif %}
+                            {% if pl.descripcion %}<p>{{ pl.descripcion }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay productos laborales registrados.</p>
+            {% endif %}
+        </section>
+
+        <!-- VENTAS GARAGE -->
+        <section class="card slide-in-left">
+            <div class="section-title">Ventas Garage</div>
+            {% if ventas.exists %}
+                <ul>
+                    {% for v in ventas %}
+                        <li>
+                            <strong>{{ v.nombreproducto }}</strong>
+                            {% if v.estadoproducto %}<div><strong>Estado:</strong> {{ v.estadoproducto }}</div>{% endif %}
+                            {% if v.valordelbien %}<div><strong>Valor:</strong> {{ v.valordelbien }}</div>{% endif %}
+                            {% if v.descripcion %}<p>{{ v.descripcion }}</p>{% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray">No hay ventas registradas.</p>
+            {% endif %}
+        </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/animations.js' %}"></script>
+</body>
+</html>

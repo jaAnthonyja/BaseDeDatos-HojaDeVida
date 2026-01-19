@@ -1,0 +1,144 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+<style>
+    body {
+        background: linear-gradient(135deg, #7B68EE 0%, #6A5ACD 100%);
+        overflow-x: hidden;
+    }
+    
+    /* Decoración de fondo */
+    body::before {
+        content: '';
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: 
+            repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 100px);
+        animation: backgroundMove 20s linear infinite;
+        z-index: -1;
+        pointer-events: none;
+    }
+    
+    @keyframes backgroundMove {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(50px, 50px); }
+    }
+    
+    #login {
+        padding: 0 !important;
+    }
+    
+    #login .module {
+        box-shadow: none;
+        border: none;
+        background: transparent;
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+<div class="window-container">
+    <!-- Barra superior de ventana -->
+    <div class="window-header">
+        <div class="window-controls">
+            <div class="window-control close"></div>
+            <div class="window-control minimize"></div>
+            <div class="window-control maximize"></div>
+        </div>
+        <div class="window-title">🔐 Sistema de Login</div>
+    </div>
+    
+    <!-- Contenido de la ventana -->
+    <div class="window-body">
+        <div class="login-container">
+            <!-- Icono decorativo -->
+            <div class="login-icon">🔒</div>
+            
+            <!-- Título -->
+            <h1 class="login-title">{% trans 'Administración' %}</h1>
+            
+            <!-- Mensajes de error -->
+            {% if form.errors %}
+            <div class="messagelist">
+                <li class="error">
+                    {% if form.errors.items|length == 1 %}
+                        {% trans "Por favor corrija el error abajo." %}
+                    {% else %}
+                        {% trans "Por favor corrija los errores abajo." %}
+                    {% endif %}
+                </li>
+            </div>
+            {% endif %}
+            
+            <!-- Formulario de login (MANTENER TODA LA FUNCIONALIDAD) -->
+            <form action="{{ app_path }}" method="post" id="login-form">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <label for="id_username">{{ form.username.label }}:</label>
+                    {{ form.username }}
+                </div>
+                
+                <div class="form-row">
+                    <label for="id_password">{{ form.password.label }}:</label>
+                    {{ form.password }}
+                </div>
+                
+                <input type="hidden" name="next" value="{{ next }}">
+                
+                <div class="submit-row">
+                    <input type="submit" value="{% trans 'Iniciar Sesión' %}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Animación de ventanas flotantes en el fondo -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Crear ventanas decorativas flotantes
+    const colors = ['#FF1493', '#00CED1', '#FFD700', '#9370DB', '#FF8C00'];
+    for (let i = 0; i < 5; i++) {
+        const window = document.createElement('div');
+        window.style.cssText = `
+            position: fixed;
+            width: 100px;
+            height: 80px;
+            background: ${colors[i]};
+            border: 4px solid #2C2C2C;
+            border-radius: 6px;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            opacity: 0.2;
+            animation: float ${5 + Math.random() * 10}s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+        `;
+        document.body.appendChild(window);
+    }
+});
+
+// Animación de flotación
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

@@ -1,0 +1,350 @@
+/* ================================================
+   ADMIN MODERN STYLE - THEME OVERRIDE
+   Integra el admin con el tema verde del CV
+   ================================================ */
+
+:root {
+    --primary-green: #7ed321 !important;
+    --dark-bg: #000000 !important;
+    --secondary-dark: #1a1a1a !important;
+    --grid-green: #1a3d1a !important;
+    --text-light: #ffffff !important;
+    --text-gray: #cccccc !important;
+}
+
+/* Override admin base colors */
+#header {
+    background: var(--dark-bg) !important;
+    color: var(--text-light) !important;
+    border-bottom: 2px solid var(--primary-green) !important;
+}
+
+#header a {
+    color: var(--primary-green) !important;
+}
+
+#header a:focus, #header a:hover {
+    color: #6bc319 !important;
+}
+
+.site-title {
+    color: var(--primary-green) !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    text-shadow: 0 0 15px rgba(126, 211, 33, 0.3) !important;
+}
+
+/* Nav styles */
+#nav-global {
+    background: var(--secondary-dark) !important;
+    border-bottom: 1px solid rgba(126, 211, 33, 0.2) !important;
+}
+
+#nav-global a {
+    color: var(--primary-green) !important;
+    padding: 10px 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+#nav-global a:hover, #nav-global a:focus {
+    background: rgba(126, 211, 33, 0.1) !important;
+    color: #6bc319 !important;
+}
+
+#nav-global a.active {
+    background: rgba(126, 211, 33, 0.2) !important;
+    border-left: 3px solid var(--primary-green) !important;
+}
+
+/* Main content */
+#main {
+    background: var(--dark-bg) !important;
+}
+
+/* Module header */
+.module {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.2) !important;
+    border-radius: 2px !important;
+}
+
+.module h2 {
+    background: var(--primary-green) !important;
+    color: var(--dark-bg) !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+}
+
+.module h3 {
+    color: var(--primary-green) !important;
+    border-bottom: 1px solid rgba(126, 211, 33, 0.2) !important;
+    font-weight: 900 !important;
+}
+
+/* Buttons */
+.button, input[type="submit"] {
+    background: var(--primary-green) !important;
+    color: var(--dark-bg) !important;
+    border: none !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    padding: 10px 20px !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+    letter-spacing: 1px !important;
+}
+
+.button:hover, input[type="submit"]:hover {
+    background: #6bc319 !important;
+    box-shadow: 0 4px 12px rgba(126, 211, 33, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+.button:active, input[type="submit"]:active {
+    transform: translateY(0) !important;
+}
+
+.button.default {
+    background: var(--primary-green) !important;
+}
+
+.button.default:hover {
+    background: #6bc319 !important;
+}
+
+/* Links */
+a {
+    color: var(--primary-green) !important;
+}
+
+a:visited {
+    color: #6bc319 !important;
+}
+
+a:focus, a:hover {
+    color: #7ed321 !important;
+    text-shadow: 0 0 8px rgba(126, 211, 33, 0.4) !important;
+}
+
+/* Forms */
+input, textarea, select {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.3) !important;
+    color: var(--text-light) !important;
+    padding: 8px 10px !important;
+    border-radius: 2px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none !important;
+    border-color: var(--primary-green) !important;
+    box-shadow: 0 0 8px rgba(126, 211, 33, 0.2) !important;
+}
+
+/* Labels */
+label {
+    color: var(--text-gray) !important;
+    font-weight: bold !important;
+}
+
+/* Help text */
+.help {
+    color: var(--text-dark-gray) !important;
+}
+
+/* Messages */
+.messagelist {
+    margin: 10px 0 !important;
+}
+
+.messagelist li {
+    background: rgba(126, 211, 33, 0.1) !important;
+    border: 1px solid var(--primary-green) !important;
+    color: var(--primary-green) !important;
+    border-left: 4px solid var(--primary-green) !important;
+    border-radius: 2px !important;
+    padding: 10px 15px !important;
+}
+
+.messagelist li.error {
+    background: rgba(255, 68, 68, 0.1) !important;
+    border-color: #ff6666 !important;
+    color: #ff6666 !important;
+}
+
+.messagelist li.warning {
+    background: rgba(255, 170, 0, 0.1) !important;
+    border-color: #ffaa00 !important;
+    color: #ffaa00 !important;
+}
+
+.messagelist li.success {
+    background: rgba(126, 211, 33, 0.1) !important;
+    border-color: var(--primary-green) !important;
+    color: var(--primary-green) !important;
+}
+
+/* Table styles */
+table {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.2) !important;
+}
+
+table th {
+    background: rgba(126, 211, 33, 0.15) !important;
+    color: var(--primary-green) !important;
+    font-weight: 900 !important;
+    border-bottom: 2px solid var(--primary-green) !important;
+    text-transform: uppercase !important;
+    font-size: 12px !important;
+}
+
+table td {
+    border-bottom: 1px solid rgba(126, 211, 33, 0.1) !important;
+    color: var(--text-gray) !important;
+    padding: 10px !important;
+}
+
+table tbody tr:hover {
+    background: rgba(126, 211, 33, 0.05) !important;
+}
+
+/* Changelist */
+.change-list {
+    background: var(--dark-bg) !important;
+}
+
+/* Fieldset */
+fieldset {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.2) !important;
+    border-radius: 2px !important;
+}
+
+fieldset > legend {
+    background: var(--primary-green) !important;
+    color: var(--dark-bg) !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    padding: 5px 10px !important;
+    border-radius: 2px !important;
+}
+
+/* Search */
+#searchbar {
+    background: var(--secondary-dark) !important;
+}
+
+#searchbar input {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.3) !important;
+    color: var(--text-light) !important;
+}
+
+/* Filter */
+.module.filters {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.2) !important;
+}
+
+.module.filters h2 {
+    background: var(--primary-green) !important;
+    color: var(--dark-bg) !important;
+}
+
+.module.filters h3 {
+    color: var(--primary-green) !important;
+}
+
+.module.filters a {
+    color: var(--primary-green) !important;
+    padding: 5px 10px !important;
+    display: block !important;
+}
+
+.module.filters a:hover {
+    background: rgba(126, 211, 33, 0.1) !important;
+    color: #6bc319 !important;
+}
+
+.module.filters a.selected {
+    background: rgba(126, 211, 33, 0.2) !important;
+    color: #6bc319 !important;
+}
+
+/* Pagination */
+.paginator {
+    text-align: center !important;
+    padding: 10px 0 !important;
+}
+
+.paginator a, .paginator span {
+    padding: 8px 12px !important;
+    margin: 0 2px !important;
+    color: var(--primary-green) !important;
+}
+
+.paginator a:hover {
+    background: rgba(126, 211, 33, 0.1) !important;
+    border-radius: 2px !important;
+}
+
+.paginator .this-page {
+    background: var(--primary-green) !important;
+    color: var(--dark-bg) !important;
+    font-weight: bold !important;
+    border-radius: 2px !important;
+}
+
+/* Footer */
+#footer {
+    background: var(--secondary-dark) !important;
+    border-top: 1px solid rgba(126, 211, 33, 0.2) !important;
+    color: var(--text-gray) !important;
+}
+
+#footer a {
+    color: var(--primary-green) !important;
+}
+
+/* Admin interface dark theme */
+body {
+    background: var(--dark-bg) !important;
+    color: var(--text-light) !important;
+}
+
+/* Login page specific */
+.login #container {
+    background: var(--dark-bg) !important;
+}
+
+.login form {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.3) !important;
+}
+
+.login input {
+    background: var(--secondary-dark) !important;
+    border: 1px solid rgba(126, 211, 33, 0.3) !important;
+    color: var(--text-light) !important;
+}
+
+/* Scrollbar for admin */
+::-webkit-scrollbar {
+    width: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-green) !important;
+    border-radius: 5px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6bc319 !important;
+}

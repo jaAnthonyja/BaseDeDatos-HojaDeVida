@@ -1,0 +1,111 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/custom_admin.css' %}">
+<style>
+    body {
+        background: linear-gradient(135deg, #7B68EE 0%, #6A5ACD 100%);
+    }
+</style>
+{% endblock %}
+
+{% block usertools %}
+<div style="padding: 10px 20px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 20px;">
+    {{ user.get_full_name|default:user.username }} | 
+    <a href="{% url 'admin:logout' %}" style="color: #FFD700; font-weight: bold;">Cerrar Sesión</a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    
+    <!-- Título principal -->
+    <div class="window-container" style="max-width: 100%; margin-bottom: 30px;">
+        <div class="window-header" style="background: linear-gradient(90deg, #FF1493, #00CED1);">
+            <div class="window-controls">
+                <div class="window-control close"></div>
+                <div class="window-control minimize"></div>
+                <div class="window-control maximize"></div>
+            </div>
+            <div class="window-title">📊 Panel de Administración</div>
+        </div>
+        <div class="window-body" style="text-align: center;">
+            <h2 style="margin: 0; color: #2C2C2C;">Bienvenido a tu Sistema de Gestión</h2>
+            <p style="margin: 10px 0 0 0; color: #666;">Selecciona un módulo para comenzar</p>
+        </div>
+    </div>
+
+    <!-- Grid de módulos tipo ventanas -->
+    <div class="dashboard-windows">
+        {% for app in app_list %}
+        <div class="dashboard-window">
+            <div class="window-header">
+                <div class="window-controls">
+                    <div class="window-control close"></div>
+                    <div class="window-control minimize"></div>
+                    <div class="window-control maximize"></div>
+                </div>
+                <div class="window-title">📁 {{ app.name }}</div>
+            </div>
+            <div class="window-body">
+                {% for model in app.models %}
+                <div style="margin-bottom: 15px;">
+                    {% if model.admin_url %}
+                    <a href="{{ model.admin_url }}" style="display: block; padding: 10px; border: 2px solid #2C2C2C; border-radius: 4px; background: rgba(123,104,238,0.05); color: #2C2C2C; text-decoration: none; font-weight: bold; transition: all 0.2s;">
+                        📋 {{ model.name }}
+                    </a>
+                    {% else %}
+                    <span style="display: block; padding: 10px; border: 2px solid #ddd; border-radius: 4px; color: #999; font-weight: bold;">
+                        📋 {{ model.name }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p style="color: #999; font-style: italic;">Sin modelos disponibles</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="dashboard-window" style="grid-column: 1 / -1;">
+            <div class="window-header" style="background: var(--orange);">
+                <div class="window-controls">
+                    <div class="window-control close"></div>
+                    <div class="window-control minimize"></div>
+                    <div class="window-control maximize"></div>
+                </div>
+                <div class="window-title">⚠️ Permiso Denegado</div>
+            </div>
+            <div class="window-body">
+                <p>No tienes permisos para ver o editar nada.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Estadísticas recientes (si las hay) -->
+    {% if recent_actions %}
+    <div class="module" style="margin-top: 30px;">
+        <h2>📜 Acciones Recientes</h2>
+        <div style="padding: 20px;">
+            {% for entry in recent_actions %}
+            <div style="padding: 10px; border-bottom: 2px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>{{ entry.object_repr }}</strong>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;">{{ entry.action_flag }}</div>
+                </div>
+                <div style="font-size: 12px; color: #999;">{{ entry.action_time|date:"d/m/Y H:i" }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Script de animaciones -->
+<script src="{% static 'admin/js/custom_animations.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,409 @@
+/* PDF-only stylesheet - CYBERPUNK GREEN NEON DESIGN
+   - A4 with 15mm margins
+   - No JS, no external fonts
+   - Fixed sidebar (repeated on each page via position: fixed)
+   - Avoid breaking sections and cards across pages
+   - Hide interactive elements
+   - GREEN NEON: #7ed321 - PRIMARY
+   - Dark backgrounds: #000000, #1a1a1a
+*/
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+@page { size: A4; margin: 15mm; }
+
+html, body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #ffffff;
+    background: #000000;
+}
+
+/* Page container (each printed page) */
+.cv-page { 
+    width: 100%; 
+    min-height: calc(297mm - 30mm); 
+    height: calc(297mm - 30mm); 
+    background: #1a1a1a; 
+    padding: 0; 
+    margin-bottom: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* Header - CYBERPUNK STYLE */
+.cv-header { 
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #0d0d0d 100%); 
+    padding: 20px 20px; 
+    color: #7ed321; 
+    -webkit-print-color-adjust: exact; 
+    print-color-adjust: exact; 
+    box-shadow: 0 0 20px rgba(126, 211, 33, 0.4), inset 0 0 10px rgba(126, 211, 33, 0.1); 
+    width: 100%; 
+    margin: 0; 
+    position: relative; 
+    z-index: 10; 
+    border-bottom: 3px solid #7ed321;
+}
+
+.header-content { display: flex; justify-content: space-between; align-items: center; }
+
+.full-name { 
+    font-size: 28pt; 
+    font-weight: 900; 
+    color: #7ed321; 
+    margin-bottom: 4px; 
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.profession { 
+    font-size: 12pt; 
+    color: #cccccc; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+}
+
+/* Layout: sidebar background fixed on right */
+.cv-body { position: relative; min-height: calc(297mm - 60px); }
+
+.cv-sidebar-bg {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(26,26,26,0.98) 50%, rgba(0,0,0,0.95) 100%);
+    border-left: 4px solid #7ed321;
+    z-index: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-shadow: inset 0 0 30px rgba(126, 211, 33, 0.2), inset -5px 0 15px rgba(126, 211, 33, 0.15);
+}
+
+.cv-sidebar {
+    position: relative;
+    float: right;
+    width: 35%;
+    background: transparent;
+    padding: 20px 20px;
+    color: #ffffff;
+    page-break-inside: avoid;
+    max-height: calc(297mm - 40mm);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* Main content takes the remaining width */
+.cv-main { 
+    margin-right: 36%; 
+    padding: 20px 18px; 
+    background: #1a1a1a; 
+    min-height: calc(297mm - 40mm);
+    color: #ffffff;
+}
+
+/* Visual content cards and sections */
+.main-section { 
+    margin-bottom: 20px; 
+    position: relative; 
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(26,26,26,0.8) 0%, rgba(0,0,0,0.8) 100%);
+    border: 1px solid rgba(126, 211, 33, 0.3);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(126, 211, 33, 0.15);
+}
+
+.main-section:not(:first-of-type)::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, #7ed321 50%, transparent 100%);
+    opacity: 0.3;
+}
+
+/* Vertical timeline lines for main sections */
+.main-section .section-content {
+    position: relative;
+    padding-left: 12px;
+}
+
+.main-section .section-content::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #7ed321;
+    opacity: 0.2;
+}
+
+.section-header { 
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-icon {
+    font-size: 16pt;
+}
+
+.section-title { 
+    font-size: 14pt; 
+    font-weight: 800; 
+    color: #7ed321;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Prevent breaking inside cards */
+.experience-card, 
+.education-card, 
+.award-card, 
+.product-card, 
+.garage-card { 
+    page-break-inside: avoid; 
+    -webkit-column-break-inside: avoid; 
+    break-inside: avoid; 
+    background: linear-gradient(135deg, rgba(26,26,26,0.7) 0%, rgba(0,0,0,0.7) 100%);
+    border: 1px solid rgba(126, 211, 33, 0.3);
+    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 0 10px rgba(126, 211, 33, 0.15);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: #ffffff;
+}
+
+.card-header {
+    margin-bottom: 8px;
+}
+
+.position-title,
+.company-name {
+    color: #7ed321;
+    font-weight: 800;
+    font-size: 11pt;
+}
+
+.date-range {
+    color: #cccccc;
+    font-size: 9pt;
+}
+
+.location-tag {
+    color: #7ed321;
+    font-size: 8pt;
+    background: rgba(126, 211, 33, 0.1);
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid rgba(126, 211, 33, 0.3);
+}
+
+/* Remove interactive visuals for PDF */
+.btn, .btn-admin, .btn-cert, .btn-action, .action-buttons, .cert-actions, .no-print { 
+    display: none !important; 
+}
+
+/* Contact grid compact layout for PDF */
+.contact-grid { 
+    display: block; 
+    margin-top: 10px; 
+    background: rgba(126, 211, 33, 0.05);
+    border-radius: 4px; 
+    padding: 12px; 
+    border: 1px solid rgba(126, 211, 33, 0.3);
+    box-shadow: inset 0 0 10px rgba(126, 211, 33, 0.1);
+}
+
+.contact-item { 
+    display: block; 
+    margin-bottom: 6px;
+    color: #cccccc;
+    font-size: 9pt;
+}
+
+.contact-item.icon {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.icon-label {
+    font-size: 10pt;
+}
+
+/* Sidebar content */
+.first-page-only { 
+    page-break-inside: avoid; 
+    page-break-after: avoid; 
+}
+
+.photo-container { 
+    text-align: center; 
+    margin-bottom: 18px; 
+    position: relative; 
+}
+
+.profile-photo { 
+    width: 140px; 
+    height: 140px; 
+    border-radius: 35% 65% 65% 35% / 35% 35% 65% 65%;
+    object-fit: cover; 
+    border: 3px solid #7ed321;
+    box-shadow: 0 0 20px rgba(126, 211, 33, 0.6), inset 0 0 15px rgba(126, 211, 33, 0.2);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.profile-photo.placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7ed321, #1a3d1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48pt;
+    font-weight: 900;
+    color: #000000;
+    border: 3px solid #7ed321;
+}
+
+.sidebar-section { 
+    margin-bottom: 18px; 
+    padding: 12px;
+    background: rgba(126, 211, 33, 0.05);
+    border: 1px solid rgba(126, 211, 33, 0.2);
+    border-radius: 4px;
+}
+
+.sidebar-title { 
+    font-size: 11pt; 
+    font-weight: 800; 
+    color: #7ed321; 
+    margin-bottom: 10px; 
+    border-bottom: 2px solid #7ed321;
+    padding-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar-content{
+    font-size: 9pt;
+}
+
+.info-item { 
+    margin-bottom: 6px;
+    color: #cccccc;
+}
+
+.info-label { 
+    font-size: 8pt; 
+    color: #7ed321;
+    font-weight: 600;
+    display: block; 
+    margin-bottom: 2px;
+}
+
+.info-value { 
+    font-size: 9pt; 
+    color: #ffffff;
+}
+
+.info-link{
+    color: #7ed321;
+    text-decoration: underline;
+}
+
+/* Skills */
+.skills-container{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-pill{
+    display: inline-block;
+    background: rgba(126, 211, 33, 0.2);
+    border: 1px solid #7ed321;
+    color: #7ed321;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 8pt;
+    font-weight: 600;
+}
+
+/* Certificate page styles */
+.certificate-page { 
+    page-break-before: always; 
+    page-break-after: always; 
+    width: 100%; 
+    height: calc(297mm - 30mm); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 15mm;
+    background: #1a1a1a;
+}
+
+.certificate-wrapper { 
+    width: 100%; 
+    text-align: center; 
+}
+
+.certificate-title { 
+    font-size: 18pt; 
+    font-weight: 800; 
+    color: #7ed321; 
+    margin-bottom: 20px; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.certificate-frame { 
+    width: 100%; 
+    max-width: 180mm; 
+    margin: 0 auto; 
+    border: 3px solid #7ed321;
+    border-radius: 8px; 
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(126, 211, 33, 0.4);
+}
+
+.certificate-image { 
+    width: 100%; 
+    height: auto; 
+    display: block; 
+}
+
+/* Print-specific adjustments */
+@media print {
+    body { background: #000000; padding: 0; }
+    .cv-page { margin: 0; page-break-after: always; box-shadow: none; border-radius: 0; }
+    .cv-sidebar-bg { position: fixed; }
+}
+
+/* Safety: force small font sizes */
+.description-text { 
+    font-size: 9pt; 
+    line-height: 1.4; 
+    color: #cccccc;
+}
+
+.hidden-for-pdf { 
+    display: none !important; 
+}
+
+/* Ensure headings do not become widows/orphans */
+h1, h2, h3, h4 { widows: 2; orphans: 2; }
+.section-title { page-break-after: avoid; }
+
+/* End of PDF stylesheet - CYBERPUNK DESIGN */
