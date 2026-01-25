@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curriculum Vitae - {{ perfil.nombres }} {{ perfil.apellidos }}</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'perfil/css/cv_profesional.css' %}">
+</head>
+<body>
+    <div class="cv-page">
+        <!-- HEADER CON INFORMACIÓN PERSONAL -->
+        <div class="cv-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="full-name">{{ perfil.nombres }} {{ perfil.apellidos }}</h1>
+                    {% if perfil.descripcionperfil %}
+                        <p class="profession">{{ perfil.descripcionperfil }}</p>
+                    {% endif %}
+                </div>
+                <div class="header-right no-print"></div>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR PRINCIPAL -->
+        <div class="cv-body">
+            <!-- SIDEBAR IZQUIERDO -->
+            <aside class="cv-sidebar">
+                <!-- FOTO DE PERFIL -->
+                <div class="photo-container">
+                    {% if perfil.foto_perfil_url %}
+                        <img src="{{ foto_perfil_proxy_url|default:perfil.foto_perfil_url }}"
+                            alt="Foto de perfil"
+                            class="profile-photo">
+                    {% else %}
+                        <div class="profile-photo placeholder">
+                            {{ perfil.nombres|first }}{{ perfil.apellidos|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- DATOS PERSONALES -->
+                {% if mostrar_datos_personales %}
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Datos Personales</h3>
+                    <div class="sidebar-content">
+                        {% if perfil.nacionalidad %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.nacionalidad }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.fechanacimiento %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.fechanacimiento|date:"d/m/Y" }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.lugarnacimiento %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.lugarnacimiento }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.sexo %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.sexo }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.estadocivil %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.estadocivil }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.numerocedula %}
+                            <div class="info-item">
+                                <span class="info-value">{{ perfil.numerocedula }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- CONTACTO -->
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Contacto</h3>
+                    <div class="sidebar-content">
+                        {% if perfil.telefonofijo %}
+                            <div class="info-item icon">
+                                <span class="icon-label">📞</span>
+                                <span class="info-value">{{ perfil.telefonofijo }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.telefonoconvencional %}
+                            <div class="info-item icon">
+                                <span class="icon-label">📱</span>
+                                <span class="info-value">{{ perfil.telefonoconvencional }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.sitioweb %}
+                            <div class="info-item icon">
+                                <span class="icon-label">🌐</span>
+                                <a href="{{ perfil.sitioweb }}" target="_blank" class="info-link">Sitio Web</a>
+                            </div>
+                        {% endif %}
+                        {% if perfil.direcciondomiciliaria %}
+                            <div class="info-item icon">
+                                <span class="icon-label">🏠</span>
+                                <span class="info-value">{{ perfil.direcciondomiciliaria }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HABILIDADES -->
+                {% if habilidades %}
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Habilidades</h3>
+                    <div class="sidebar-content">
+                        <div class="skills-container">
+                            {% for habilidad in habilidades %}
+                                <span class="skill-pill">{{ habilidad }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- INTERESES -->
+                {% if intereses %}
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Intereses</h3>
+                    <div class="sidebar-content">
+                        <p class="interests-text">{{ intereses }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="cv-main">
+                <!-- EXPERIENCIA LABORAL -->
+                {% if mostrar_experiencia and experiencias_qs %}
+                    {% if experiencias_qs.exists %}
+                        <section class="main-section">
+                            <h2 class="section-title">Experiencia Laboral</h2>
+                            <div class="section-content">
+                                {% for exp_group in experiencias %}
+                                    <div class="timeline-block">
+                                        <h3 class="company-name">{{ exp_group.empresa }}</h3>
+                                        {% for exp in exp_group.experiencias %}
+                                            <div class="experience-card">
+                                                {% if exp.cargodesempenado %}
+                                                    <div class="position-title">{{ exp.cargodesempenado }}</div>
+                                                {% endif %}
+                                                <div class="date-badge">
+                                                    {% if exp.fechainiciogestion %}{{ exp.fechainiciogestion|date:"M/Y" }}{% endif %}
+                                                    {% if exp.fechafingestion %} – {{ exp.fechafingestion|date:"M/Y" }}{% else %} – Presente{% endif %}
+                                                </div>
+                                                {% if exp.lugarempresa %}
+                                                    <div class="location-tag">{{ exp.lugarempresa }}</div>
+                                                {% endif %}
+                                                {% if exp.descripcionfunciones %}
+                                                    <p class="description-text">{{ exp.descripcionfunciones }}</p>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endif %}
+
+                <!-- EDUCACIÓN -->
+                {% if mostrar_educacion and educacion_qs %}
+                    {% if educacion_qs.exists %}
+                        <section class="main-section">
+                            <h2 class="section-title">Educación</h2>
+                            <div class="section-content">
+                                {% for edu in cursos %}
+                                    <div class="education-card">
+                                        {% if edu.entidadpatrocinadora %}
+                                            <div class="institution-name" style="font-weight: 600;">{{ edu.entidadpatrocinadora }}</div>
+                                        {% endif %}
+                                        {% if edu.nombrecurso %}
+                                            <div class="course-title">{{ edu.nombrecurso }}</div>
+                                        {% endif %}
+                                        <div class="date-badge">
+                                            {% if edu.fechainicio %}{{ edu.fechainicio|date:"Y" }}{% endif %}
+                                            {% if edu.fechafin %} – {{ edu.fechafin|date:"Y" }}{% else %} – Presente{% endif %}
+                                        </div>
+                                        {% if edu.totalhoras %}
+                                            <div style="font-size: 9px; color: #7f8c8d; margin-bottom: 4px;">{{ edu.totalhoras }} horas</div>
+                                        {% endif %}
+                                        {% if edu.descripcioncurso %}
+                                            <p class="description-text">{{ edu.descripcioncurso }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endif %}
+
+                <!-- RECONOCIMIENTOS -->
+                {% if mostrar_reconocimientos and reconocimientos_qs %}
+                    {% if reconocimientos_qs.exists %}
+                        <section class="main-section">
+                            <h2 class="section-title">Reconocimientos</h2>
+                            <div class="section-content">
+                                {% for recon in reconocimientos %}
+                                    <div class="award-card">
+                                        {% if recon.tiporeconocimiento %}
+                                            <span class="award-type">{{ recon.tiporeconocimiento }}</span>
+                                        {% endif %}
+                                        {% if recon.descripcionreconocimiento %}
+                                            <div class="award-title">{{ recon.descripcionreconocimiento }}</div>
+                                        {% endif %}
+                                        <div class="award-meta">
+                                            {% if recon.entidadpatrocinadora %}
+                                                <span class="award-entity">{{ recon.entidadpatrocinadora }}</span>
+                                            {% endif %}
+                                            {% if recon.fechareconocimiento %}
+                                                <span class="award-date">{{ recon.fechareconocimiento|date:"Y" }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endif %}
+
+                <!-- PRODUCTOS ACADÉMICOS -->
+                {% if mostrar_productos_academicos and productos_academicos_qs %}
+                    {% if productos_academicos_qs.exists %}
+                        <section class="main-section">
+                            <h2 class="section-title">Productos Académicos</h2>
+                            <div class="section-content">
+                                {% for prod in productos_academicos %}
+                                    <div class="product-card">
+                                        {% if prod.nombrerecurso %}
+                                            <div class="product-title">{{ prod.nombrerecurso }}</div>
+                                        {% endif %}
+                                        {% if prod.clasificador %}
+                                            <span class="product-tag">{{ prod.clasificador }}</span>
+                                        {% endif %}
+                                        {% if prod.descripcion %}
+                                            <p class="description-text">{{ prod.descripcion }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endif %}
+
+                <!-- PRODUCTOS LABORALES -->
+                {% if mostrar_productos_laborales and productos_laborales_qs %}
+                    {% if productos_laborales_qs.exists %}
+                        <section class="main-section">
+                            <h2 class="section-title">Productos Laborales</h2>
+                            <div class="section-content">
+                                {% for prod in productos_laborales %}
+                                    <div class="product-card">
+                                        {% if prod.nombreproducto %}
+                                            <div class="product-title">{{ prod.nombreproducto }}</div>
+                                        {% endif %}
+                                        {% if prod.fechaproducto %}
+                                            <div style="font-size: 9px; color: #7f8c8d; margin-bottom: 4px;">{{ prod.fechaproducto|date:"Y" }}</div>
+                                        {% endif %}
+                                        {% if prod.descripcion %}
+                                            <p class="description-text">{{ prod.descripcion }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

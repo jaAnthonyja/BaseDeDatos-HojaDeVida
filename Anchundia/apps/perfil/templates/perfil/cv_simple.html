@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - {{ perfil.nombres }} {{ perfil.apellidos }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+        }
+        
+        .cv-container {
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 0;
+            background: white;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #ecf0f1;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .item {
+            margin-bottom: 15px;
+            padding-left: 0;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            font-size: 13px;
+            color: #2c3e50;
+            margin-bottom: 3px;
+        }
+        
+        .item-subtitle {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 3px;
+        }
+        
+        .item-date {
+            font-size: 11px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .item-description {
+            font-size: 11px;
+            color: #555;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+        
+        .contact-info {
+            font-size: 10px;
+            color: #666;
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid #eee;
+        }
+        
+        .contact-line {
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>{{ perfil.nombres }} {{ perfil.apellidos }}</h1>
+            {% if perfil.descripcionperfil %}
+                <p>{{ perfil.descripcionperfil }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- CONTENIDO -->
+        <div class="content">
+            <!-- EXPERIENCIA LABORAL -->
+            {% if experiencias %}
+            <div class="section">
+                <div class="section-title">Experiencia Laboral</div>
+                {% for exp_group in experiencias %}
+                    {% for exp in exp_group.experiencias %}
+                    <div class="item">
+                        <div class="item-title">{{ exp_group.empresa }}</div>
+                        <div class="item-subtitle">{{ exp.cargodesempenado }}</div>
+                        <div class="item-date">
+                            {{ exp.fechainiciogestion|date:"M Y" }} - 
+                            {% if exp.fechafingestion %}
+                                {{ exp.fechafingestion|date:"M Y" }}
+                            {% else %}
+                                Presente
+                            {% endif %}
+                        </div>
+                        {% if exp.lugarempresa %}
+                            <div class="item-subtitle">📍 {{ exp.lugarempresa }}</div>
+                        {% endif %}
+                        {% if exp.descripcionfunciones %}
+                            <div class="item-description">{{ exp.descripcionfunciones }}</div>
+                        {% endif %}
+                        {% if exp.emailempresa or exp.sitiowebempresa or exp.nombrecontactoempresarial or exp.telefonocontactoempresarial %}
+                            <div class="contact-info">
+                                {% if exp.nombrecontactoempresarial %}
+                                    <div class="contact-line"><strong>Contacto:</strong> {{ exp.nombrecontactoempresarial }}</div>
+                                {% endif %}
+                                {% if exp.telefonocontactoempresarial %}
+                                    <div class="contact-line"><strong>Teléfono:</strong> {{ exp.telefonocontactoempresarial }}</div>
+                                {% endif %}
+                                {% if exp.emailempresa %}
+                                    <div class="contact-line"><strong>Email:</strong> {{ exp.emailempresa }}</div>
+                                {% endif %}
+                                {% if exp.sitiowebempresa %}
+                                    <div class="contact-line"><strong>Sitio Web:</strong> {{ exp.sitiowebempresa }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- EDUCACIÓN -->
+            {% if cursos %}
+            <div class="section">
+                <div class="section-title">Educación y Cursos</div>
+                {% for curso in cursos %}
+                <div class="item">
+                    {% if curso.entidadpatrocinadora %}
+                        <div class="item-title">{{ curso.entidadpatrocinadora }}</div>
+                    {% endif %}
+                    {% if curso.nombrecurso %}
+                        <div class="item-subtitle">{{ curso.nombrecurso }}</div>
+                    {% endif %}
+                    <div class="item-date">
+                        {{ curso.fechainicio|date:"M Y" }} - 
+                        {% if curso.fechafin %}
+                            {{ curso.fechafin|date:"M Y" }}
+                        {% else %}
+                            Presente
+                        {% endif %}
+                    </div>
+                    {% if curso.totalhoras %}
+                        <div class="item-subtitle">⏱ {{ curso.totalhoras }} horas</div>
+                    {% endif %}
+                    {% if curso.descripcioncurso %}
+                        <div class="item-description">{{ curso.descripcioncurso }}</div>
+                    {% endif %}
+                    {% if curso.nombrecontactoauspicia or curso.telefonocontactoauspicia or curso.emailempresapatrocinadora %}
+                        <div class="contact-info">
+                            {% if curso.nombrecontactoauspicia %}
+                                <div class="contact-line"><strong>Contacto:</strong> {{ curso.nombrecontactoauspicia }}</div>
+                            {% endif %}
+                            {% if curso.telefonocontactoauspicia %}
+                                <div class="contact-line"><strong>Teléfono:</strong> {{ curso.telefonocontactoauspicia }}</div>
+                            {% endif %}
+                            {% if curso.emailempresapatrocinadora %}
+                                <div class="contact-line"><strong>Email:</strong> {{ curso.emailempresapatrocinadora }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- RECONOCIMIENTOS -->
+            {% if reconocimientos %}
+            <div class="section">
+                <div class="section-title">Reconocimientos</div>
+                {% for recon in reconocimientos %}
+                <div class="item">
+                    {% if recon.tiporeconocimiento %}
+                        <div class="item-title">{{ recon.tiporeconocimiento }}</div>
+                    {% endif %}
+                    {% if recon.descripcionreconocimiento %}
+                        <div class="item-subtitle">{{ recon.descripcionreconocimiento }}</div>
+                    {% endif %}
+                    {% if recon.entidadpatrocinadora %}
+                        <div class="item-subtitle">{{ recon.entidadpatrocinadora }}</div>
+                    {% endif %}
+                    {% if recon.fechareconocimiento %}
+                        <div class="item-date">{{ recon.fechareconocimiento|date:"d/m/Y" }}</div>
+                    {% endif %}
+                    {% if recon.nombrecontactoauspicia or recon.telefonocontactoauspicia %}
+                        <div class="contact-info">
+                            {% if recon.nombrecontactoauspicia %}
+                                <div class="contact-line"><strong>Contacto:</strong> {{ recon.nombrecontactoauspicia }}</div>
+                            {% endif %}
+                            {% if recon.telefonocontactoauspicia %}
+                                <div class="contact-line"><strong>Teléfono:</strong> {{ recon.telefonocontactoauspicia }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- PRODUCTOS ACADÉMICOS -->
+            {% if productos_academicos %}
+            <div class="section">
+                <div class="section-title">Productos Académicos</div>
+                {% for prod in productos_academicos %}
+                <div class="item">
+                    {% if prod.nombrerecurso %}
+                        <div class="item-title">{{ prod.nombrerecurso }}</div>
+                    {% endif %}
+                    {% if prod.clasificador %}
+                        <div class="item-subtitle">{{ prod.clasificador }}</div>
+                    {% endif %}
+                    {% if prod.descripcion %}
+                        <div class="item-description">{{ prod.descripcion }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- PRODUCTOS LABORALES -->
+            {% if productos_laborales %}
+            <div class="section">
+                <div class="section-title">Productos Laborales</div>
+                {% for prod in productos_laborales %}
+                <div class="item">
+                    {% if prod.nombreproducto %}
+                        <div class="item-title">{{ prod.nombreproducto }}</div>
+                    {% endif %}
+                    {% if prod.fechaproducto %}
+                        <div class="item-date">📅 {{ prod.fechaproducto|date:"d/m/Y" }}</div>
+                    {% endif %}
+                    {% if prod.descripcion %}
+                        <div class="item-description">{{ prod.descripcion }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

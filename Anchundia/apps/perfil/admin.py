@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import DatosPersonales
+from .models import DatosPersonales, VisibilidadSecciones
+from datetime import date
 
 from apps.documentos.services.azure_storage import upload_profile_image
 
@@ -26,11 +27,33 @@ class DatosPersonalesAdminForm(forms.ModelForm):
                 raise ValidationError('Solo se permiten imágenes PNG (content-type debe ser image/png)')
         return f
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_nacimiento = cleaned_data.get('fechanacimiento')
+        
+        # Validar que fecha de nacimiento no sea mayor a 2026
+        if fecha_nacimiento and fecha_nacimiento.year > 2026:
+            raise ValidationError('Error: Vuelva a ingresar las fechas')
+        
+        return cleaned_data
+
 
 @admin.register(DatosPersonales)
 class DatosPersonalesAdmin(admin.ModelAdmin):
     form = DatosPersonalesAdminForm
-    list_display = ('apellidos', 'nombres', 'numerocedula', 'perfilactivo')
+    list_display = ('apellidos', 'nombres', 'numerocedula', 'fechanacimiento', 'perfilactivo')
+    
+    fieldsets = (
+        ('Información Personal', {
+            'fields': ('nombres', 'apellidos', 'numerocedula', 'fechanacimiento', 'nacionalidad', 'lugarnacimiento', 'sexo', 'estadocivil')
+        }),
+        ('Contacto', {
+            'fields': ('telefonoconvencional', 'telefonofijo', 'direcciontrabajo', 'direcciondomiciliaria', 'sitioweb', 'licenciaconducir')
+        }),
+        ('Perfil', {
+            'fields': ('descripcionperfil', 'perfilactivo', 'foto_perfil_file', 'foto_perfil_url')
+        }),
+    )
 
     class Media:
         css = {
@@ -48,8 +71,37 @@ class DatosPersonalesAdmin(admin.ModelAdmin):
             except Exception as exc:
                 # Raise ValidationError so admin shows the problem
                 raise ValidationError(f'Error subiendo la imagen a Azure: {exc}')
-
         super().save_model(request, obj, form, change)
+
+
+@admin.register(VisibilidadSecciones)
+class VisibilidadSeccionesAdmin(admin.ModelAdmin):
+    list_display = ('mostrar_experiencia_laboral', 'mostrar_cursos', 'mostrar_reconocimientos', 'mostrar_productos_academicos', 'mostrar_productos_laborales', 'mostrar_venta_garage')
+    
+    fieldsets = (
+        ('Mostrar/Ocultar Secciones', {
+            'fields': ('mostrar_experiencia_laboral', 'mostrar_cursos', 'mostrar_reconocimientos', 'mostrar_productos_academicos', 'mostrar_productos_laborales', 'mostrar_venta_garage'),
+            'description': 'Marque o desmarque para mostrar u ocultar las secciones en el CV'
+        }),
+    )
+
+    def has_add_permission(self, request):
+        # No permitir agregar más instancias si ya existe una
+        return not VisibilidadSecciones.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        # No permitir eliminar
+        return False
+
+    def changelist_view(self, request, extra_context=None):
+        # Redirigir automáticamente a la única instancia existente
+        instance = VisibilidadSecciones.objects.first()
+        if instance:
+            from django.shortcuts import redirect
+            return redirect(f'/admin/perfil/visibilidadsecciones/{instance.pk}/change/')
+        # Si no existe, ir al listado normal (donde se puede crear)
+        return super().changelist_view(request, extra_context)
+
 
 # Global admin branding
 admin.site.site_header = "CV Manager — Panel"

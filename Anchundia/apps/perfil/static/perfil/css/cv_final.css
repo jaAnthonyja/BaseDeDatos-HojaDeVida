@@ -1,0 +1,499 @@
+/* ====================================
+   CV PROFESIONAL - WEASYPRINT OPTIMIZADO
+   ==================================== */
+
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --bg-light: #ecf0f1;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@page {
+    size: A4;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--white);
+}
+
+body {
+    overflow: hidden;
+}
+
+/* ====================================
+   CONTENEDOR PRINCIPAL
+   ==================================== */
+.cv-page {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+}
+
+/* ====================================
+   HEADER
+   ==================================== */
+.cv-header {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary) 0%, #34495e 100%);
+    color: var(--white);
+    padding: 30px 40px;
+    flex-shrink: 0;
+}
+
+.header-content {
+    display: flex;
+    gap: 20px;
+}
+
+.header-left {
+    flex: 1;
+}
+
+.full-name {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    color: var(--white);
+}
+
+.profession {
+    font-size: 13px;
+    color: var(--secondary);
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.header-right {
+    display: none;
+}
+
+/* ====================================
+   LAYOUT PRINCIPAL (FLEX)
+   ==================================== */
+.cv-body {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+/* SIDEBAR */
+.cv-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: var(--bg-light);
+    padding: 25px 15px;
+    border-right: 3px solid var(--primary);
+}
+
+/* CONTENIDO PRINCIPAL */
+.cv-main {
+    flex: 1;
+    padding: 25px 35px;
+    background: var(--white);
+}
+
+/* ====================================
+   FOTO DE PERFIL
+   ==================================== */
+.photo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-photo {
+    width: 140px;
+    height: 140px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 4px solid var(--primary);
+    display: block;
+    margin: 0 auto;
+}
+
+.profile-photo.placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: var(--white);
+    border: 4px solid var(--primary);
+    margin: 0 auto;
+}
+
+/* ====================================
+   SECCIONES DEL SIDEBAR
+   ==================================== */
+.sidebar-section {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.sidebar-title {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--secondary);
+    display: block;
+}
+
+.sidebar-content {
+    display: block;
+    font-size: 9px;
+    line-height: 1.4;
+}
+
+.info-item {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 9px;
+    color: var(--text);
+    word-wrap: break-word;
+}
+
+.info-item.icon {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.icon-label {
+    font-size: 11px;
+    flex-shrink: 0;
+    color: var(--secondary);
+}
+
+.info-value {
+    display: block;
+    font-size: 9px;
+    color: var(--text);
+    word-wrap: break-word;
+}
+
+.info-link {
+    display: block;
+    font-size: 9px;
+    color: var(--secondary);
+    text-decoration: none;
+    word-wrap: break-word;
+}
+
+/* SKILLS */
+.skills-container {
+    display: block;
+}
+
+.skill-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    font-size: 9px;
+}
+
+.skill-pill::before {
+    content: '●';
+    color: var(--secondary);
+    font-weight: bold;
+    font-size: 7px;
+    flex-shrink: 0;
+}
+
+/* INTERESES */
+.interests-text {
+    display: block;
+    font-size: 9px;
+    color: var(--text);
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* ====================================
+   SECCIONES DEL CONTENIDO PRINCIPAL
+   ==================================== */
+.main-section {
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+}
+
+.section-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 3px solid var(--secondary);
+    display: block;
+}
+
+/* ====================================
+   CARDS
+   ==================================== */
+.experience-card,
+.education-card,
+.award-card,
+.product-card {
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+    display: block;
+}
+
+.company-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 3px;
+    display: block;
+    word-wrap: break-word;
+}
+
+.position-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 2px;
+    display: block;
+    word-wrap: break-word;
+}
+
+.date-badge {
+    font-size: 9px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+    display: block;
+    font-weight: 500;
+}
+
+.location-tag {
+    font-size: 9px;
+    color: var(--text-light);
+    margin-bottom: 5px;
+    display: block;
+    word-wrap: break-word;
+}
+
+.description-text {
+    font-size: 9px;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 6px;
+    text-align: justify;
+    display: block;
+    word-wrap: break-word;
+}
+
+/* LISTAS */
+.experience-card ul,
+.education-card ul,
+.award-card ul,
+.product-card ul {
+    margin: 6px 0 0 15px;
+    padding: 0;
+    list-style-type: disc;
+}
+
+.experience-card li,
+.education-card li,
+.award-card li,
+.product-card li {
+    font-size: 9px;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 2px;
+    word-wrap: break-word;
+}
+
+/* CONTACT GRID */
+.contact-grid {
+    display: block;
+    margin-top: 8px;
+    font-size: 9px;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.contact-icon {
+    font-size: 10px;
+    flex-shrink: 0;
+    color: var(--secondary);
+}
+
+.contact-text,
+.contact-link {
+    font-size: 9px;
+    color: var(--text);
+    text-decoration: none;
+    word-wrap: break-word;
+}
+
+/* AWARDS */
+.award-type {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--secondary);
+    color: var(--white);
+    font-size: 8px;
+    font-weight: bold;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.award-title {
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 3px;
+    display: block;
+}
+
+.award-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+    font-size: 9px;
+}
+
+.award-entity {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.award-date {
+    color: var(--text-light);
+}
+
+/* PRODUCTS */
+.product-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 2px;
+    display: block;
+    word-wrap: break-word;
+}
+
+.product-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 8px;
+    color: var(--text-light);
+    margin-bottom: 3px;
+    margin-right: 4px;
+}
+
+.product-date {
+    font-size: 9px;
+    color: var(--text-light);
+    display: block;
+    margin-bottom: 3px;
+}
+
+/* ====================================
+   ELEMENTOS A OCULTAR
+   ==================================== */
+.section-header,
+.section-icon,
+.section-content,
+.timeline-block,
+.timeline-marker,
+.timeline-content,
+.section-nav,
+.card-header,
+.header-right,
+.no-print,
+.print-button,
+.check-all-button,
+.btn-admin,
+.btn-whatsapp {
+    display: none !important;
+}
+
+.timeline-content {
+    display: block !important;
+}
+
+.card-header {
+    display: block !important;
+}
+
+/* ====================================
+   MEDIA PRINT
+   ==================================== */
+@media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+    }
+
+    .cv-page {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+    }
+
+    .cv-header {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .award-type {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .profile-photo.placeholder {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

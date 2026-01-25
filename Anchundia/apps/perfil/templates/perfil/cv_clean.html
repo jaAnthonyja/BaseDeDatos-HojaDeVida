@@ -32,14 +32,22 @@
                         </a>
                     </div>
                     <div class="header-bottom-row">
-                        <button class="btn-action-header print-button" onclick="window.print()">
+                        <button class="btn-action-header print-button" onclick="window.print()" style="display: none;">
                             <span class="btn-icon">🖨️</span>
                             <span class="btn-text">Imprimir</span>
                         </button>
-                        <a class="btn-action-header check-all-button" href="{% url 'descargar_cv_completo_pdf' %}?check_all=1">
+                        <a class="btn-action-header check-all-button" href="{% url 'descargar_cv_completo_profesional' %}" title="Descargar CV + Certificados">
                             <span class="btn-icon">📦</span>
-                            <span class="btn-text">Check All</span>
+                            <span class="btn-text">CV + CERTIFICADOS</span>
                         </a>
+                        <a class="btn-action-header check-all-button" href="{% url 'seleccionar_secciones_cv' %}" title="Descargar CV personalizado">
+                            <span class="btn-icon">⬇️</span>
+                        </a>
+                        {% if mostrar_venta_garage %}
+                        <a class="btn-action-header check-all-button" href="{% url 'venta_garage' %}" target="_blank" title="Ver venta garage">
+                            <span class="btn-icon">🏪</span>
+                        </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -49,9 +57,28 @@
         <div class="cv-body">
             <!-- LEFT COLUMN (MAIN CONTENT - 68%) -->
             <div class="cv-main">
+                <!-- NAVIGATION BAR -->
+                <div class="section-nav">
+                    {% if mostrar_experiencia %}
+                        <a href="#experiencia" class="section-nav-btn">Experiencia Laboral</a>
+                    {% endif %}
+                    {% if mostrar_cursos %}
+                        <a href="#educacion" class="section-nav-btn">Educación y Cursos</a>
+                    {% endif %}
+                    {% if mostrar_reconocimientos %}
+                        <a href="#reconocimientos" class="section-nav-btn">Reconocimientos</a>
+                    {% endif %}
+                    {% if mostrar_productos_laborales %}
+                        <a href="#productos-laborales" class="section-nav-btn">Productos Laborales</a>
+                    {% endif %}
+                    {% if mostrar_productos_academicos %}
+                        <a href="#productos-academicos" class="section-nav-btn">Productos Académicos</a>
+                    {% endif %}
+                </div>
+
                 <!-- EXPERIENCIA LABORAL -->
-                {% if experiencias_qs.exists %}
-                    <section class="main-section">
+                {% if experiencias_qs.exists and mostrar_experiencia %}
+                    <section id="experiencia" class="main-section">
                         <div class="section-header">
                             <div class="section-icon">💼</div>
                             <h2 class="section-title">Experiencia Laboral</h2>
@@ -61,7 +88,9 @@
                                 <div class="timeline-block">
                                     <div class="timeline-marker"></div>
                                     <div class="timeline-content">
-                                        <h3 class="company-name">{{ exp_group.empresa }}</h3>
+                                        <div style="grid-column: 1 / -1;">
+                                            <h3 class="company-name">{{ exp_group.empresa }}</h3>
+                                        </div>
                                         {% for exp in exp_group.experiencias %}
                                             <div class="experience-card">
                                                 <div class="card-header">
@@ -131,8 +160,8 @@
                 {% endif %}
 
                 <!-- EDUCACIÓN Y CURSOS -->
-                {% if cursos.exists %}
-                    <section class="main-section">
+                {% if cursos.exists and mostrar_cursos %}
+                    <section id="educacion" class="main-section">
                         <div class="section-header">
                             <div class="section-icon">🎓</div>
                             <h2 class="section-title">Educación y Cursos</h2>
@@ -207,8 +236,8 @@
                 {% endif %}
 
                 <!-- RECONOCIMIENTOS -->
-                {% if reconocimientos.exists %}
-                    <section class="main-section">
+                {% if reconocimientos.exists and mostrar_reconocimientos %}
+                    <section id="reconocimientos" class="main-section">
                         <div class="section-header">
                             <div class="section-icon">🏆</div>
                             <h2 class="section-title">Reconocimientos</h2>
@@ -267,8 +296,8 @@
                 {% endif %}
 
                 <!-- PRODUCTOS ACADÉMICOS -->
-                {% if productos_academicos.exists %}
-                    <section class="main-section">
+                {% if productos_academicos.exists and mostrar_productos_academicos %}
+                    <section id="productos-academicos" class="main-section">
                         <div class="section-header">
                             <div class="section-icon">📚</div>
                             <h2 class="section-title">Productos Académicos</h2>
@@ -292,8 +321,8 @@
                 {% endif %}
 
                 <!-- PRODUCTOS LABORALES -->
-                {% if productos_laborales.exists %}
-                    <section class="main-section">
+                {% if productos_laborales.exists and mostrar_productos_laborales %}
+                    <section id="productos-laborales" class="main-section">
                         <div class="section-header">
                             <div class="section-icon">🔧</div>
                             <h2 class="section-title">Productos Laborales</h2>
@@ -317,8 +346,8 @@
                 {% endif %}
 
                 <!-- VENTA GARAGE -->
-                {% if ventas_garage.exists %}
-                    <section class="main-section">
+                {% if ventas_garage.exists and mostrar_venta_garage %}
+                    <section class="main-section" style="display: none;">
                         <div class="section-header">
                             <div class="section-icon">🏪</div>
                             <h2 class="section-title">Venta Garage</h2>

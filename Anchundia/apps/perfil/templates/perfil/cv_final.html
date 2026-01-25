@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - {{ perfil.nombres }} {{ perfil.apellidos }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'perfil/css/cv_final.css' %}">
+</head>
+<body>
+    <div class="cv-page">
+        <!-- HEADER -->
+        <div class="cv-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="full-name">{{ perfil.nombres }} {{ perfil.apellidos }}</h1>
+                    {% if perfil.descripcionperfil %}
+                        <p class="profession">{{ perfil.descripcionperfil }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- BODY -->
+        <div class="cv-body">
+            <!-- SIDEBAR -->
+            <aside class="cv-sidebar">
+                <!-- FOTO -->
+                <div class="photo-container">
+                    {% if perfil.foto_perfil_url %}
+                        <img src="{{ foto_perfil_proxy_url|default:perfil.foto_perfil_url }}"
+                            alt="Foto"
+                            class="profile-photo">
+                    {% else %}
+                        <div class="profile-photo placeholder">
+                            {{ perfil.nombres|first }}{{ perfil.apellidos|first }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- DATOS PERSONALES -->
+                {% if mostrar_datos_personales %}
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Datos Personales</div>
+                    <div class="sidebar-content">
+                        {% if perfil.nacionalidad %}
+                            <div class="info-item">{{ perfil.nacionalidad }}</div>
+                        {% endif %}
+                        {% if perfil.fechanacimiento %}
+                            <div class="info-item">{{ perfil.fechanacimiento|date:"d/m/Y" }}</div>
+                        {% endif %}
+                        {% if perfil.lugarnacimiento %}
+                            <div class="info-item">{{ perfil.lugarnacimiento }}</div>
+                        {% endif %}
+                        {% if perfil.sexo %}
+                            <div class="info-item">{{ perfil.sexo }}</div>
+                        {% endif %}
+                        {% if perfil.estadocivil %}
+                            <div class="info-item">{{ perfil.estadocivil }}</div>
+                        {% endif %}
+                        {% if perfil.numerocedula %}
+                            <div class="info-item">{{ perfil.numerocedula }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- CONTACTO -->
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Contacto</div>
+                    <div class="sidebar-content">
+                        {% if perfil.telefonofijo %}
+                            <div class="info-item icon">
+                                <span class="icon-label">📞</span>
+                                <span class="info-value">{{ perfil.telefonofijo }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.telefonoconvencional %}
+                            <div class="info-item icon">
+                                <span class="icon-label">📱</span>
+                                <span class="info-value">{{ perfil.telefonoconvencional }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.sitioweb %}
+                            <div class="info-item icon">
+                                <span class="icon-label">🌐</span>
+                                <span class="info-value">{{ perfil.sitioweb }}</span>
+                            </div>
+                        {% endif %}
+                        {% if perfil.direcciondomiciliaria %}
+                            <div class="info-item icon">
+                                <span class="icon-label">🏠</span>
+                                <span class="info-value">{{ perfil.direcciondomiciliaria }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- HABILIDADES -->
+                {% if habilidades %}
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Habilidades</div>
+                    <div class="sidebar-content">
+                        <div class="skills-container">
+                            {% for habilidad in habilidades %}
+                                <div class="skill-pill">{{ habilidad }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- INTERESES -->
+                {% if intereses %}
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Intereses</div>
+                    <div class="sidebar-content">
+                        <p class="interests-text">{{ intereses }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </aside>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <div class="cv-main">
+                <!-- EXPERIENCIA -->
+                {% if experiencias %}
+                <section class="main-section">
+                    <div class="section-title">Experiencia Laboral</div>
+                    {% for exp_group in experiencias %}
+                        <div class="timeline-block">
+                            <div class="company-name">{{ exp_group.empresa }}</div>
+                            {% for exp in exp_group.experiencias %}
+                                <div class="experience-card">
+                                    <div class="position-title">{{ exp.cargodesempenado }}</div>
+                                    <div class="date-badge">{{ exp.fechainiciogestion|date:"F Y" }} - Presente</div>
+                                    <div class="location-tag">📍 {{ exp.lugarempresa }}</div>
+                                    <p class="description-text">{{ exp.descripcionfunciones }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <!-- EDUCACIÓN -->
+                {% if cursos %}
+                <section class="main-section">
+                    <div class="section-title">Educación y Cursos</div>
+                    {% for edu in cursos %}
+                        <div class="education-card">
+                            {% if edu.entidadpatrocinadora %}
+                                <div class="company-name">{{ edu.entidadpatrocinadora }}</div>
+                            {% endif %}
+                            {% if edu.nombrecurso %}
+                                <div class="position-title">{{ edu.nombrecurso }}</div>
+                            {% endif %}
+                            <div class="date-badge">
+                                {% if edu.fechainicio %}{{ edu.fechainicio|date:"F Y" }}{% endif %}
+                                {% if edu.fechafin %} - {{ edu.fechafin|date:"F Y" }}{% else %} - Presente{% endif %}
+                            </div>
+                            {% if edu.totalhoras %}
+                                <div class="location-tag">⏱ {{ edu.totalhoras }} horas</div>
+                            {% endif %}
+                            {% if edu.descripcioncurso %}
+                                <p class="description-text">{{ edu.descripcioncurso }}</p>
+                            {% endif %}
+                            {% if edu.nombrecontactoauspicia or edu.telefonocontactoauspicia or edu.emailempresapatrocinadora %}
+                                <div class="contact-grid">
+                                    {% if edu.nombrecontactoauspicia %}
+                                        <div class="contact-item">
+                                            <span class="contact-icon">👤</span>
+                                            <span class="contact-text">{{ edu.nombrecontactoauspicia }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if edu.telefonocontactoauspicia %}
+                                        <div class="contact-item">
+                                            <span class="contact-icon">📞</span>
+                                            <span class="contact-text">{{ edu.telefonocontactoauspicia }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if edu.emailempresapatrocinadora %}
+                                        <div class="contact-item">
+                                            <span class="contact-icon">✉️</span>
+                                            <span class="contact-text">{{ edu.emailempresapatrocinadora }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <!-- RECONOCIMIENTOS -->
+                {% if reconocimientos %}
+                <section class="main-section">
+                    <div class="section-title">Reconocimientos</div>
+                    {% for recon in reconocimientos %}
+                        <div class="award-card">
+                            {% if recon.tiporeconocimiento %}
+                                <span class="award-type">{{ recon.tiporeconocimiento }}</span>
+                            {% endif %}
+                            {% if recon.descripcionreconocimiento %}
+                                <div class="award-title">{{ recon.descripcionreconocimiento }}</div>
+                            {% endif %}
+                            <div class="award-meta">
+                                {% if recon.entidadpatrocinadora %}
+                                    <span class="award-entity">{{ recon.entidadpatrocinadora }}</span>
+                                {% endif %}
+                                {% if recon.fechareconocimiento %}
+                                    <span class="award-date">{{ recon.fechareconocimiento|date:"d/m/Y" }}</span>
+                                {% endif %}
+                            </div>
+                            {% if recon.nombrecontactoauspicia or recon.telefonocontactoauspicia %}
+                                <div class="contact-grid">
+                                    {% if recon.nombrecontactoauspicia %}
+                                        <div class="contact-item">
+                                            <span class="contact-icon">👤</span>
+                                            <span class="contact-text">{{ recon.nombrecontactoauspicia }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if recon.telefonocontactoauspicia %}
+                                        <div class="contact-item">
+                                            <span class="contact-icon">📞</span>
+                                            <span class="contact-text">{{ recon.telefonocontactoauspicia }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <!-- PRODUCTOS ACADÉMICOS -->
+                {% if productos_academicos %}
+                <section class="main-section">
+                    <div class="section-title">Productos Académicos</div>
+                    {% for prod in productos_academicos %}
+                        <div class="product-card">
+                            {% if prod.nombrerecurso %}
+                                <div class="product-title">{{ prod.nombrerecurso }}</div>
+                            {% endif %}
+                            {% if prod.clasificador %}
+                                <span class="product-tag">{{ prod.clasificador }}</span>
+                            {% endif %}
+                            {% if prod.descripcion %}
+                                <p class="description-text">{{ prod.descripcion }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
+                <!-- PRODUCTOS LABORALES -->
+                {% if productos_laborales %}
+                <section class="main-section">
+                    <div class="section-title">Productos Laborales</div>
+                    {% for prod in productos_laborales %}
+                        <div class="product-card">
+                            {% if prod.nombreproducto %}
+                                <div class="product-title">{{ prod.nombreproducto }}</div>
+                            {% endif %}
+                            {% if prod.fechaproducto %}
+                                <div class="product-date">📅 {{ prod.fechaproducto|date:"d/m/Y" }}</div>
+                            {% endif %}
+                            {% if prod.descripcion %}
+                                <p class="description-text">{{ prod.descripcion }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

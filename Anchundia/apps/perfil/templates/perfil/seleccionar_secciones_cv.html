@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Secciones del CV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        .section-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .section-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .section-item:hover {
+            background-color: #f0f0f0;
+            border-color: #7ed321;
+        }
+
+        .section-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #7ed321;
+        }
+
+        .section-item label {
+            flex: 1;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download {
+            background-color: #7ed321;
+            color: #000;
+            box-shadow: 0 2px 8px rgba(126, 211, 33, 0.4);
+        }
+
+        .btn-download:hover {
+            background-color: #6bc319;
+            box-shadow: 0 4px 12px rgba(126, 211, 33, 0.6);
+            transform: scale(1.1);
+        }
+
+        .btn-cancel {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #ccc;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .check-all-container {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .btn-check-all {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-check-all:hover {
+            background-color: #229954;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Selecciona las Secciones</h1>
+        
+        <p class="info-text">Elige qué partes del CV deseas incluir en el PDF:</p>
+
+        <div class="check-all-container">
+            <button type="button" class="btn-check-all" onclick="toggleAllCheckboxes()">✓ Marcar Todo</button>
+        </div>
+
+        <form id="sectionForm" class="section-list">
+            <div class="section-item">
+                <input type="checkbox" id="experiencia" name="experiencia" value="experiencia" checked>
+                <label for="experiencia">Experiencia Laboral</label>
+            </div>
+
+            <div class="section-item">
+                <input type="checkbox" id="educacion" name="educacion" value="educacion" checked>
+                <label for="educacion">Educación y Cursos</label>
+            </div>
+
+            <div class="section-item">
+                <input type="checkbox" id="reconocimientos" name="reconocimientos" value="reconocimientos" checked>
+                <label for="reconocimientos">Reconocimientos</label>
+            </div>
+
+            <div class="section-item">
+                <input type="checkbox" id="productos-laborales" name="productos_laborales" value="productos_laborales" checked>
+                <label for="productos-laborales">Productos Laborales</label>
+            </div>
+
+            <div class="section-item">
+                <input type="checkbox" id="productos-academicos" name="productos_academicos" value="productos_academicos" checked>
+                <label for="productos-academicos">Productos Académicos</label>
+            </div>
+        </form>
+
+        <div class="button-group">
+            <button class="btn btn-cancel" title="Cancelar" onclick="window.history.back()">❌</button>
+            <button class="btn btn-download" title="Descargar PDF" onclick="descargarPDF()">⬇️</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAllCheckboxes() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !allChecked;
+            });
+            
+            // Cambiar el texto del botón
+            const btn = document.querySelector('.btn-check-all');
+            if (allChecked) {
+                btn.textContent = '✓ Marcar Todo';
+            } else {
+                btn.textContent = '✗ Desmarcar Todo';
+            }
+            
+            // Esperar un poco antes de descargar
+            setTimeout(descargarPDF, 300);
+        }
+
+        function descargarPDF() {
+            const form = document.getElementById('sectionForm');
+            const formData = new FormData(form);
+            
+            // Crear los parámetros de la URL
+            const params = new URLSearchParams();
+            
+            // Agregar solo los checkboxes marcados
+            if (document.getElementById('experiencia').checked) {
+                params.append('experiencia', '1');
+            }
+            if (document.getElementById('educacion').checked) {
+                params.append('educacion', '1');
+            }
+            if (document.getElementById('reconocimientos').checked) {
+                params.append('reconocimientos', '1');
+            }
+            if (document.getElementById('productos-laborales').checked) {
+                params.append('productos_laborales', '1');
+            }
+            if (document.getElementById('productos-academicos').checked) {
+                params.append('productos_academicos', '1');
+            }
+            
+            // Redirigir a la vista que genera el PDF con los parámetros
+            window.location.href = `{% url 'descargar_cv_pdf_selectivo' %}?${params.toString()}`;
+        }
+
+        // Descargar automáticamente al cambiar cualquier checkbox
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                // Pequeño delay para que el usuario vea el cambio
+                setTimeout(descargarPDF, 300);
+            });
+        });
+
+        // Hacer clickeables los labels
+        document.querySelectorAll('.section-item label').forEach(label => {
+            label.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') {
+                    label.previousElementSibling.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

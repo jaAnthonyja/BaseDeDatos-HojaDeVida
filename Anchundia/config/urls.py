@@ -16,13 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from apps.perfil.views import hoja_vida_publica, descargar_cv_pdf, descargar_cv_completo_pdf, ver_foto_perfil
+from apps.perfil.views import hoja_vida_publica, descargar_cv_pdf, descargar_cv_completo_pdf, ver_foto_perfil, seleccionar_secciones_cv, descargar_cv_pdf_selectivo, descargar_cv_completo_profesional, venta_garage
 from apps.trayectoria.views import ver_certificado_curso, ver_certificado_reconocimiento, ver_certificado_experiencia
 
 urlpatterns = [
     path('', hoja_vida_publica, name='hoja_vida_publica'),
     path('descargar-cv/', descargar_cv_pdf, name='descargar_cv_pdf'),
     path('descargar-cv-completo/', descargar_cv_completo_pdf, name='descargar_cv_completo_pdf'),
+    path('descargar-cv-completo-profesional/', descargar_cv_completo_profesional, name='descargar_cv_completo_profesional'),
+    path('seleccionar-secciones/', seleccionar_secciones_cv, name='seleccionar_secciones_cv'),
+    path('descargar-cv-pdf/', descargar_cv_pdf_selectivo, name='descargar_cv_pdf_selectivo'),
+    path('venta-garage/', venta_garage, name='venta_garage'),
 
     # Certificate proxy endpoints
     path('certificados/curso/<int:curso_id>/', ver_certificado_curso, name='ver_certificado_curso'),

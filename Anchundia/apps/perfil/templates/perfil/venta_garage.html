@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venta Garage - {{ perfil.nombres }} {{ perfil.apellidos }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .garage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .garage-card {
+            background: #f9f9f9;
+            border: 2px solid #e8f5e9;
+            border-left: 5px solid #27ae60;
+            padding: 20px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .garage-card:hover {
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .product-title {
+            color: #1e8449;
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .garage-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .price-tag {
+            display: inline-block;
+            background: #52be80;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .description-text {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .publication-date {
+            color: #27ae60;
+            font-size: 13px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .availability-badge {
+            display: inline-block;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #1e8449;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 Venta Garage</h1>
+            <p>{{ perfil.nombres }} {{ perfil.apellidos }}</p>
+        </div>
+
+        <div class="content">
+            <a href="/" class="back-button">← Volver</a>
+
+            {% if ventas_garage %}
+                <div class="garage-grid">
+                    {% for venta in ventas_garage %}
+                        <div class="garage-card">
+                            {% if venta.nombreproducto %}
+                                <h4 class="product-title">{{ venta.nombreproducto }}</h4>
+                            {% endif %}
+                            <div class="garage-meta">
+                                {% if venta.estadoproducto %}
+                                    <span class="status-badge">{{ venta.estadoproducto }}</span>
+                                {% endif %}
+                                {% if venta.disponibilidad %}
+                                    <span class="availability-badge" style="background-color: {% if venta.disponibilidad == 'Disponible' %}#27ae60{% else %}#e74c3c{% endif %};">
+                                        {{ venta.disponibilidad }}
+                                    </span>
+                                {% endif %}
+                                {% if venta.valordelbien %}
+                                    <span class="price-tag">${{ venta.valordelbien }}</span>
+                                {% endif %}
+                            </div>
+                            {% if venta.fecha_publicacion %}
+                                <p class="publication-date">📅 Publicado: {{ venta.fecha_publicacion|date:"d/m/Y" }}</p>
+                            {% endif %}
+                            {% if venta.descripcion %}
+                                <p class="description-text">{{ venta.descripcion }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-message">
+                    <p>No hay ventas de garage disponibles en este momento.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

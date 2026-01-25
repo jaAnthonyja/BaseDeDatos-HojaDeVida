@@ -36,3 +36,19 @@ class DatosPersonales(models.Model):
 
     class Meta:
         db_table = 'DATOSPERSONALES'
+
+
+class VisibilidadSecciones(models.Model):
+    """Modelo para controlar la visibilidad de las secciones en el CV"""
+    mostrar_experiencia_laboral = models.BooleanField(default=True, db_column='mostrar_experiencia_laboral')
+    mostrar_cursos = models.BooleanField(default=True, db_column='mostrar_cursos')
+    mostrar_reconocimientos = models.BooleanField(default=True, db_column='mostrar_reconocimientos')
+    mostrar_productos_academicos = models.BooleanField(default=True, db_column='mostrar_productos_academicos')
+    mostrar_productos_laborales = models.BooleanField(default=True, db_column='mostrar_productos_laborales')
+    mostrar_venta_garage = models.BooleanField(default=True, db_column='mostrar_venta_garage')
+
+    class Meta:
+        db_table = 'VISIBILIDAD_SECCIONES'
+
+    def __str__(self):
+        return "Configuración de Visibilidad de Secciones"

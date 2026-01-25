@@ -632,6 +632,35 @@ html, body {
     display: none !important;
 }
 
+/* ====================================
+   ADAPTACIÓN PARA PANTALLAS GRANDES
+   ==================================== */
+
+/* Ocupar casi toda la pantalla en pantallas ultra-anchas */
+@media screen and (min-width: 1920px) {
+    .cv-page {
+        width: 90%;
+        margin: 20px auto;
+        max-width: 90%;
+    }
+}
+
+@media screen and (min-width: 1600px) and (max-width: 1919px) {
+    .cv-page {
+        width: 92%;
+        margin: 20px auto;
+        max-width: 92%;
+    }
+}
+
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+    .cv-page {
+        width: 94%;
+        margin: 20px auto;
+        max-width: 94%;
+    }
+}
+
 @media print {
     body {
         background: white;

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CV - {{ perfil.nombres }} {{ perfil.apellidos }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.5;
+            color: #333;
+            background: white;
+        }
+        
+        .cv-wrapper {
+            width: 100%;
+            height: 297mm;
+            display: table;
+            background: white;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            display: table-cell;
+            width: 200px;
+            height: 297mm;
+            background: linear-gradient(135deg, #1e8449 0%, #145a32 100%);
+            color: white;
+            padding: 25px 15px;
+            vertical-align: top;
+            border-right: 5px solid #27ae60;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #52be80;
+            border-bottom: 2px solid #52be80;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-content {
+            font-size: 11px;
+            line-height: 1.6;
+        }
+        
+        .info-item {
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #52be80;
+            font-size: 10px;
+        }
+        
+        .photo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .profile-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid #52be80;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .photo-placeholder {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid #52be80;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #52be80;
+        }
+        
+        /* MAIN CONTENT */
+        .main-content {
+            display: table-cell;
+            padding: 30px 30px;
+            vertical-align: top;
+            width: calc(100% - 200px);
+            height: 297mm;
+            background: white;
+        }
+        
+        .header {
+            margin-bottom: 25px;
+            border-bottom: 3px solid #1e8449;
+            padding-bottom: 15px;
+        }
+        
+        .full-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .profession {
+            font-size: 14px;
+            color: #1e8449;
+            font-weight: 500;
+        }
+        
+        .section {
+            margin-bottom: 22px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            background: #1e8449;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .job-item {
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        
+        .job-header {
+            display: table;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .company-name {
+            display: table-cell;
+            font-weight: bold;
+            font-size: 13px;
+            color: #2c3e50;
+            width: 60%;
+        }
+        
+        .job-dates {
+            display: table-cell;
+            font-size: 11px;
+            color: #666;
+            text-align: right;
+            width: 40%;
+        }
+        
+        .position-title {
+            font-size: 12px;
+            color: #1e8449;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .job-location {
+            font-size: 11px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .job-description {
+            font-size: 11px;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            padding: 0 0 0 10px;
+            border-left: 2px solid #ecf0f1;
+        }
+        
+        .contact-info {
+            font-size: 10px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 3px;
+            margin-top: 8px;
+        }
+        
+        .contact-line {
+            margin-bottom: 2px;
+        }
+        
+        .contact-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .education-item,
+        .recognition-item,
+        .product-item {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+        
+        .item-title {
+            font-weight: bold;
+            font-size: 12px;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+        
+        .item-subtitle {
+            font-size: 11px;
+            color: #1e8449;
+            margin-bottom: 2px;
+        }
+        
+        .item-date {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        
+        .item-description {
+            font-size: 11px;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+            }
+            .cv-wrapper {
+                height: 297mm;
+            }
+            .sidebar,
+            .main-content {
+                height: 297mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-wrapper">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <!-- FOTO -->
+            <div class="photo-container">
+                {% if perfil.foto_perfil_url %}
+                    <img src="{{ foto_perfil_proxy_url|default:perfil.foto_perfil_url }}" 
+                         alt="Foto de perfil" 
+                         class="profile-photo">
+                {% else %}
+                    <div class="photo-placeholder">
+                        {{ perfil.nombres|first }}{{ perfil.apellidos|first }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- DATOS PERSONALES -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Datos Personales</div>
+                <div class="sidebar-content">
+                    {% if perfil.nacionalidad %}
+                        <div class="info-item"><span class="info-label">País:</span><br>{{ perfil.nacionalidad }}</div>
+                    {% endif %}
+                    {% if perfil.fechanacimiento %}
+                        <div class="info-item"><span class="info-label">Nacimiento:</span><br>{{ perfil.fechanacimiento|date:"d/m/Y" }}</div>
+                    {% endif %}
+                    {% if perfil.lugarnacimiento %}
+                        <div class="info-item"><span class="info-label">Ciudad:</span><br>{{ perfil.lugarnacimiento }}</div>
+                    {% endif %}
+                    {% if perfil.sexo %}
+                        <div class="info-item"><span class="info-label">Género:</span><br>{{ perfil.sexo }}</div>
+                    {% endif %}
+                    {% if perfil.estadocivil %}
+                        <div class="info-item"><span class="info-label">Estado Civil:</span><br>{{ perfil.estadocivil }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- CONTACTO -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Contacto</div>
+                <div class="sidebar-content">
+                    {% if perfil.telefonoconvencional %}
+                        <div class="info-item">📞 {{ perfil.telefonoconvencional }}</div>
+                    {% endif %}
+                    {% if perfil.telefonofijo %}
+                        <div class="info-item">☎️ {{ perfil.telefonofijo }}</div>
+                    {% endif %}
+                    {% if perfil.sitioweb %}
+                        <div class="info-item">🌐 {{ perfil.sitioweb }}</div>
+                    {% endif %}
+                    {% if perfil.direcciondomiciliaria %}
+                        <div class="info-item">🏠 {{ perfil.direcciondomiciliaria }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <!-- HEADER -->
+            <div class="header">
+                <h1 class="full-name">{{ perfil.nombres }} {{ perfil.apellidos }}</h1>
+                {% if perfil.descripcionperfil %}
+                    <p class="profession">{{ perfil.descripcionperfil }}</p>
+                {% endif %}
+            </div>
+            
+            <!-- EXPERIENCIA LABORAL -->
+            {% if experiencias and mostrar_experiencia %}
+            <div class="section">
+                <div class="section-title">Experiencia Laboral</div>
+                {% for exp_group in experiencias %}
+                    {% for exp in exp_group.experiencias %}
+                    <div class="job-item">
+                        <div class="job-header">
+                            <div class="company-name">{{ exp_group.empresa }}</div>
+                            <div class="job-dates">
+                                {{ exp.fechainiciogestion|date:"M Y" }}
+                                {% if exp.fechafingestion %}- {{ exp.fechafingestion|date:"M Y" }}{% else %}- Presente{% endif %}
+                            </div>
+                        </div>
+                        <div class="position-title">{{ exp.cargodesempenado }}</div>
+                        {% if exp.lugarempresa %}
+                            <div class="job-location">📍 {{ exp.lugarempresa }}</div>
+                        {% endif %}
+                        {% if exp.descripcionfunciones %}
+                            <div class="job-description">{{ exp.descripcionfunciones }}</div>
+                        {% endif %}
+                        {% if exp.emailempresa or exp.sitiowebempresa or exp.nombrecontactoempresarial or exp.telefonocontactoempresarial %}
+                            <div class="contact-info">
+                                {% if exp.nombrecontactoempresarial %}
+                                    <div class="contact-line"><span class="contact-label">Contacto:</span> {{ exp.nombrecontactoempresarial }}</div>
+                                {% endif %}
+                                {% if exp.telefonocontactoempresarial %}
+                                    <div class="contact-line"><span class="contact-label">Tel:</span> {{ exp.telefonocontactoempresarial }}</div>
+                                {% endif %}
+                                {% if exp.emailempresa %}
+                                    <div class="contact-line"><span class="contact-label">Email:</span> {{ exp.emailempresa }}</div>
+                                {% endif %}
+                                {% if exp.sitiowebempresa %}
+                                    <div class="contact-line"><span class="contact-label">Web:</span> {{ exp.sitiowebempresa }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- EDUCACIÓN -->
+            {% if cursos and mostrar_educacion %}
+            <div class="section">
+                <div class="section-title">Educación y Cursos</div>
+                {% for curso in cursos %}
+                <div class="education-item">
+                    <div class="job-header">
+                        <div class="company-name">
+                            {% if curso.entidadpatrocinadora %}{{ curso.entidadpatrocinadora }}{% endif %}
+                        </div>
+                        <div class="job-dates">
+                            {{ curso.fechainicio|date:"M Y" }}
+                            {% if curso.fechafin %}- {{ curso.fechafin|date:"M Y" }}{% else %}- Presente{% endif %}
+                        </div>
+                    </div>
+                    {% if curso.nombrecurso %}
+                        <div class="position-title">{{ curso.nombrecurso }}</div>
+                    {% endif %}
+                    {% if curso.totalhoras %}
+                        <div class="job-location">⏱ {{ curso.totalhoras }} horas</div>
+                    {% endif %}
+                    {% if curso.descripcioncurso %}
+                        <div class="job-description">{{ curso.descripcioncurso }}</div>
+                    {% endif %}
+                    {% if curso.nombrecontactoauspicia or curso.telefonocontactoauspicia or curso.emailempresapatrocinadora %}
+                        <div class="contact-info">
+                            {% if curso.nombrecontactoauspicia %}
+                                <div class="contact-line"><span class="contact-label">Contacto:</span> {{ curso.nombrecontactoauspicia }}</div>
+                            {% endif %}
+                            {% if curso.telefonocontactoauspicia %}
+                                <div class="contact-line"><span class="contact-label">Tel:</span> {{ curso.telefonocontactoauspicia }}</div>
+                            {% endif %}
+                            {% if curso.emailempresapatrocinadora %}
+                                <div class="contact-line"><span class="contact-label">Email:</span> {{ curso.emailempresapatrocinadora }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- RECONOCIMIENTOS -->
+            {% if reconocimientos and mostrar_reconocimientos %}
+            <div class="section">
+                <div class="section-title">Reconocimientos</div>
+                {% for recon in reconocimientos %}
+                <div class="recognition-item">
+                    {% if recon.tiporeconocimiento %}
+                        <div class="item-title">{{ recon.tiporeconocimiento }}</div>
+                    {% endif %}
+                    {% if recon.descripcionreconocimiento %}
+                        <div class="item-subtitle">{{ recon.descripcionreconocimiento }}</div>
+                    {% endif %}
+                    {% if recon.entidadpatrocinadora %}
+                        <div class="job-location">{{ recon.entidadpatrocinadora }}</div>
+                    {% endif %}
+                    {% if recon.fechareconocimiento %}
+                        <div class="item-date">{{ recon.fechareconocimiento|date:"d/m/Y" }}</div>
+                    {% endif %}
+                    {% if recon.nombrecontactoauspicia or recon.telefonocontactoauspicia %}
+                        <div class="contact-info">
+                            {% if recon.nombrecontactoauspicia %}
+                                <div class="contact-line"><span class="contact-label">Contacto:</span> {{ recon.nombrecontactoauspicia }}</div>
+                            {% endif %}
+                            {% if recon.telefonocontactoauspicia %}
+                                <div class="contact-line"><span class="contact-label">Tel:</span> {{ recon.telefonocontactoauspicia }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- PRODUCTOS ACADÉMICOS -->
+            {% if productos_academicos and mostrar_productos_academicos %}
+            <div class="section">
+                <div class="section-title">Productos Académicos</div>
+                {% for prod in productos_academicos %}
+                <div class="product-item">
+                    {% if prod.nombrerecurso %}
+                        <div class="item-title">{{ prod.nombrerecurso }}</div>
+                    {% endif %}
+                    {% if prod.clasificador %}
+                        <div class="item-subtitle">{{ prod.clasificador }}</div>
+                    {% endif %}
+                    {% if prod.descripcion %}
+                        <div class="item-description">{{ prod.descripcion }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <!-- PRODUCTOS LABORALES -->
+            {% if productos_laborales and mostrar_productos_laborales %}
+            <div class="section">
+                <div class="section-title">Productos Laborales</div>
+                {% for prod in productos_laborales %}
+                <div class="product-item">
+                    <div class="job-header">
+                        <div class="company-name">{{ prod.nombreproducto }}</div>
+                        <div class="job-dates">📅 {{ prod.fechaproducto|date:"d/m/Y" }}</div>
+                    </div>
+                    {% if prod.descripcion %}
+                        <div class="item-description">{{ prod.descripcion }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

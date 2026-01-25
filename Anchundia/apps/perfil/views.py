@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from apps.perfil.models import DatosPersonales
+from apps.perfil.models import DatosPersonales, VisibilidadSecciones
 from apps.trayectoria.models import (
     ExperienciaLaboral,
     CursoRealizado,
@@ -17,6 +17,11 @@ import base64
 import mimetypes
 from django.urls import reverse
 from weasyprint import HTML, CSS
+import io
+from pypdf import PdfReader, PdfWriter
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.units import inch
 
 
 def _render_html_to_pdf(html: str, request) -> bytes:
@@ -199,6 +204,11 @@ def hoja_vida_publica(request):
         activarparaqueseveaenfront=True,
     ).order_by('nombreproducto')
 
+    # Obtener configuración de visibilidad de secciones
+    visibilidad = VisibilidadSecciones.objects.first()
+    if not visibilidad:
+        visibilidad = VisibilidadSecciones.objects.create()
+
     context = {
         'perfil': perfil,
         'datos_personales': perfil,
@@ -209,6 +219,12 @@ def hoja_vida_publica(request):
         'productos_academicos': productos_academicos,
         'productos_laborales': productos_laborales,
         'ventas_garage': ventas_garage,
+        'mostrar_experiencia': visibilidad.mostrar_experiencia_laboral,
+        'mostrar_cursos': visibilidad.mostrar_cursos,
+        'mostrar_reconocimientos': visibilidad.mostrar_reconocimientos,
+        'mostrar_productos_academicos': visibilidad.mostrar_productos_academicos,
+        'mostrar_productos_laborales': visibilidad.mostrar_productos_laborales,
+        'mostrar_venta_garage': visibilidad.mostrar_venta_garage,
     }
 
     # Provide the same photo proxy URL used by the PDF path so browsers can fetch the image
@@ -685,3 +701,460 @@ def ver_foto_perfil(request):
     resp['Content-Disposition'] = f'inline; filename="{filename}"'
     return resp
 
+
+def seleccionar_secciones_cv(request):
+    """Mostrar pantalla para seleccionar qué secciones incluir en el PDF."""
+    return render(request, 'perfil/seleccionar_secciones_cv.html')
+
+
+def descargar_cv_pdf_selectivo(request):
+    """Generate a PDF of the CV with only selected sections."""
+    from django.http import HttpResponse
+    from django.template.loader import render_to_string
+    from django.db.models import Max
+
+    # Obtener qué secciones están seleccionadas
+    mostrar_experiencia = request.GET.get('experiencia') == '1'
+    mostrar_educacion = request.GET.get('educacion') == '1'
+    mostrar_reconocimientos = request.GET.get('reconocimientos') == '1'
+    mostrar_productos_laborales = request.GET.get('productos_laborales') == '1'
+    mostrar_productos_academicos = request.GET.get('productos_academicos') == '1'
+    mostrar_datos_personales = True  # Siempre mostrar datos personales
+
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    if not perfil:
+        from datetime import date
+        try:
+            perfil = DatosPersonales.objects.create(
+                nombres="Perfil",
+                apellidos="Predeterminado",
+                descripcionperfil="Perfil por defecto",
+                perfilactivo=1,
+                nacionalidad="Colombia",
+                lugarnacimiento="Bogotá",
+                fechanacimiento=date.today(),
+                numerocedula="1234567890",
+                sexo="H",
+                estadocivil="Soltero",
+                licenciaconducir="B1",
+                telefonoconvencional="3001234567",
+                telefonofijo="6012345678",
+                direcciontrabajo="Calle 123",
+                direcciondomiciliaria="Carrera 456",
+                sitioweb="https://example.com"
+            )
+        except Exception as e:
+            return HttpResponse(f'Error creando perfil: {str(e)}', status=500)
+
+    # Preparar experiencias agrupadas
+    experiencias = []
+    experiencias_qs = ExperienciaLaboral.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    )
+    companies = (
+        experiencias_qs
+        .values('nombrempresa')
+        .annotate(latest=Max('fechainiciogestion'))
+        .order_by('-latest')
+    )
+    for c in companies:
+        company_name = c['nombrempresa']
+        company_experiences = (
+            experiencias_qs.filter(nombrempresa=company_name)
+            .order_by('-fechainiciogestion')
+        )
+        experiencias.append({'empresa': company_name, 'experiencias': company_experiences})
+    experiencias_qs_exists = experiencias_qs
+
+    # Preparar cursos
+    cursos = CursoRealizado.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechainicio')
+
+    # Preparar reconocimientos
+    reconocimientos = Reconocimiento.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechareconocimiento')
+
+    # Preparar productos académicos
+    productos_academicos = ProductoAcademico.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    )
+
+    # Preparar productos laborales
+    productos_laborales = ProductoLaboral.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechaproducto')
+
+    # Datos para habilidades e intereses del sidebar
+    habilidades = []
+    intereses = ""
+    
+    # URL de la foto
+    foto_perfil_proxy_url = None
+    if perfil.foto_perfil_url:
+        # Convertir a base64 para que funcione en el PDF
+        foto_base64 = _get_foto_perfil_base64(perfil)
+        if foto_base64:
+            foto_perfil_proxy_url = foto_base64
+        else:
+            # Fallback a proxy URL si base64 falla
+            foto_perfil_proxy_url = f"{request.scheme}://{request.get_host()}/foto-perfil/"
+
+    # Pasar al template
+    context = {
+        'perfil': perfil,
+        'foto_perfil_proxy_url': foto_perfil_proxy_url,
+        'experiencias': experiencias,
+        'experiencias_qs': experiencias_qs_exists,
+        'cursos': cursos,
+        'educacion': cursos,
+        'reconocimientos': reconocimientos,
+        'productos_academicos': productos_academicos,
+        'productos_laborales': productos_laborales,
+        'habilidades': habilidades,
+        'intereses': intereses,
+        'mostrar_experiencia': mostrar_experiencia,
+        'mostrar_educacion': mostrar_educacion,
+        'mostrar_reconocimientos': mostrar_reconocimientos,
+        'mostrar_datos_personales': mostrar_datos_personales,
+        'productos_laborales_qs': ProductoLaboral.objects.filter(idperfilconqueestaactivo=perfil, activarparaqueseveaenfront=True) if mostrar_productos_laborales else None,
+        'productos_academicos_qs': ProductoAcademico.objects.filter(idperfilconqueestaactivo=perfil, activarparaqueseveaenfront=True) if mostrar_productos_academicos else None,
+        'educacion_qs': CursoRealizado.objects.filter(idperfilconqueestaactivo=perfil, activarparaqueseveaenfront=True) if mostrar_educacion else None,
+        'reconocimientos_qs': Reconocimiento.objects.filter(idperfilconqueestaactivo=perfil, activarparaqueseveaenfront=True) if mostrar_reconocimientos else None,
+        'mostrar_productos_laborales': mostrar_productos_laborales,
+        'mostrar_productos_academicos': mostrar_productos_academicos,
+    }
+
+    # Renderizar el template del CV
+    html_string = render_to_string('perfil/cv_profesional_final.html', context, request=request)
+    html_string = _prepare_html_for_pdf(html_string, request)
+
+    try:
+        pdf_bytes = _render_html_to_pdf(html_string, request)
+        response = HttpResponse(pdf_bytes, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="CV_{perfil.nombres}_{perfil.apellidos}.pdf"'
+        return response
+    except RuntimeError as e:
+        return HttpResponse(f'Error generando PDF: {str(e)}', status=500)
+
+
+def _create_certificate_title_overlay(title: str) -> bytes:
+    """Create a PDF overlay with certificate title using reportlab.
+    
+    Args:
+        title: The certificate title (e.g., "Certificado de Curso - Base de Datos")
+    
+    Returns:
+        PDF bytes with the title overlay (single page)
+    """
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=A4)
+    
+    # Configurar el título pequeño como encabezado
+    c.setFont("Helvetica-Bold", 11)
+    c.setFillColor("#1e8449")  # Green color
+    
+    # Agregar línea separadora
+    c.setStrokeColor("#27ae60")
+    c.setLineWidth(1.5)
+    
+    # Escribir título al tope de la página
+    y_position = A4[1] - 0.35 * inch
+    c.drawString(0.5 * inch, y_position, title)
+    
+    # Línea fina debajo del título
+    c.line(0.5 * inch, y_position - 0.08 * inch, A4[0] - 0.5 * inch, y_position - 0.08 * inch)
+    
+    c.save()
+    buffer.seek(0)
+    return buffer.getvalue()
+
+
+def _add_title_to_certificate(cert_pdf_bytes: bytes, title: str) -> bytes:
+    """Add title overlay to the first page of a certificate PDF.
+    
+    Args:
+        cert_pdf_bytes: The certificate PDF bytes
+        title: The certificate title
+    
+    Returns:
+        PDF bytes with title overlaid on first page
+    """
+    try:
+        # Create title overlay
+        title_overlay_bytes = _create_certificate_title_overlay(title)
+        
+        # Read both PDFs
+        cert_reader = PdfReader(io.BytesIO(cert_pdf_bytes))
+        title_reader = PdfReader(io.BytesIO(title_overlay_bytes))
+        
+        # Merge title overlay onto first page of certificate
+        first_page = cert_reader.pages[0]
+        title_page = title_reader.pages[0]
+        first_page.merge_page(title_page)
+        
+        # Create new PDF with merged first page
+        writer = PdfWriter()
+        writer.add_page(first_page)
+        
+        # Add remaining pages
+        for page in cert_reader.pages[1:]:
+            writer.add_page(page)
+        
+        # Write to buffer
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+        return output.getvalue()
+    except Exception:
+        return cert_pdf_bytes
+
+
+
+
+def descargar_cv_completo_profesional(request):
+    """Generate single PDF with CV first, then all certificates appended."""
+    from django.http import HttpResponse
+    from django.template.loader import render_to_string
+    from django.db.models import Max
+    from pypdf import PdfWriter, PdfReader
+    import io
+
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    if not perfil:
+        from datetime import date
+        try:
+            perfil = DatosPersonales.objects.create(
+                nombres="Perfil",
+                apellidos="Predeterminado",
+                descripcionperfil="Perfil por defecto",
+                perfilactivo=1,
+                nacionalidad="Colombia",
+                lugarnacimiento="Bogotá",
+                fechanacimiento=date.today(),
+                numerocedula="1234567890",
+                sexo="H",
+                estadocivil="Soltero",
+                licenciaconducir="B1",
+                telefonoconvencional="3001234567",
+                telefonofijo="6012345678",
+                direcciontrabajo="Calle 123",
+                direcciondomiciliaria="Carrera 456",
+                sitioweb="https://example.com"
+            )
+        except Exception as e:
+            return HttpResponse(f'Error creando perfil: {str(e)}', status=500)
+
+    # Preparar experiencias agrupadas
+    experiencias = []
+    experiencias_qs = ExperienciaLaboral.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    )
+    companies = (
+        experiencias_qs
+        .values('nombrempresa')
+        .annotate(latest=Max('fechainiciogestion'))
+        .order_by('-latest')
+    )
+    for c in companies:
+        company_name = c['nombrempresa']
+        company_experiences = (
+            experiencias_qs.filter(nombrempresa=company_name)
+            .order_by('-fechainiciogestion')
+        )
+        experiencias.append({'empresa': company_name, 'experiencias': company_experiences})
+
+    cursos = CursoRealizado.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechainicio')
+
+    reconocimientos = Reconocimiento.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechareconocimiento')
+
+    productos_academicos = ProductoAcademico.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    )
+
+    productos_laborales = ProductoLaboral.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-fechaproducto')
+
+    # Foto con base64
+    foto_perfil_proxy_url = None
+    if perfil.foto_perfil_url:
+        foto_base64 = _get_foto_perfil_base64(perfil)
+        if foto_base64:
+            foto_perfil_proxy_url = foto_base64
+        else:
+            foto_perfil_proxy_url = f"{request.scheme}://{request.get_host()}/foto-perfil/"
+
+    # Contexto con TODAS las secciones visibles
+    context = {
+        'perfil': perfil,
+        'foto_perfil_proxy_url': foto_perfil_proxy_url,
+        'experiencias': experiencias,
+        'experiencias_qs': experiencias_qs,
+        'cursos': cursos,
+        'educacion': cursos,
+        'reconocimientos': reconocimientos,
+        'productos_academicos': productos_academicos,
+        'productos_laborales': productos_laborales,
+        'mostrar_experiencia': True,
+        'mostrar_educacion': True,
+        'mostrar_reconocimientos': True,
+        'mostrar_datos_personales': True,
+        'mostrar_productos_laborales': True,
+        'mostrar_productos_academicos': True,
+    }
+
+    # Generar PDF del CV
+    html_string = render_to_string('perfil/cv_profesional_final.html', context, request=request)
+    html_string = _prepare_html_for_pdf(html_string, request)
+
+    try:
+        cv_pdf_bytes = _render_html_to_pdf(html_string, request)
+    except RuntimeError as e:
+        return HttpResponse(f'Error generando PDF: {str(e)}', status=500)
+
+    # Crear PDF writer y agregar CV
+    pdf_writer = PdfWriter()
+    cv_pdf_reader = PdfReader(io.BytesIO(cv_pdf_bytes))
+    for page in cv_pdf_reader.pages:
+        pdf_writer.add_page(page)
+
+    # Agregar certificados
+    certificados_count = 0
+    
+    # Certificados de experiencias
+    for exp in experiencias_qs:
+        if getattr(exp, 'rutacertificado', None) and exp.rutacertificado.strip():
+            try:
+                from apps.trayectoria.views import _download_blob_from_url
+                cert_data, filename = _download_blob_from_url(exp.rutacertificado)
+                
+                # Si es PDF, agregar título en overlay y luego el certificado
+                if filename.lower().endswith('.pdf'):
+                    try:
+                        # Agregar título al certificado
+                        title_text = f"Certificado de Experiencia - {exp.nombrempresa} / {exp.cargo}"
+                        cert_with_title = _add_title_to_certificate(cert_data, title_text)
+                        
+                        # Agregar certificado con título
+                        cert_reader = PdfReader(io.BytesIO(cert_with_title))
+                        for page in cert_reader.pages:
+                            pdf_writer.add_page(page)
+                        certificados_count += 1
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+    # Certificados de cursos
+    for curso in cursos:
+        if getattr(curso, 'rutacertificado', None) and curso.rutacertificado.strip():
+            try:
+                from apps.trayectoria.views import _download_blob_from_url
+                cert_data, filename = _download_blob_from_url(curso.rutacertificado)
+                
+                # Si es PDF, agregar título en overlay y luego el certificado
+                if filename.lower().endswith('.pdf'):
+                    try:
+                        # Agregar título al certificado
+                        title_text = f"Certificado de Curso - {curso.nombrecurso}"
+                        cert_with_title = _add_title_to_certificate(cert_data, title_text)
+                        
+                        # Agregar certificado con título
+                        cert_reader = PdfReader(io.BytesIO(cert_with_title))
+                        for page in cert_reader.pages:
+                            pdf_writer.add_page(page)
+                        certificados_count += 1
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+    # Certificados de reconocimientos
+    for recon in reconocimientos:
+        if getattr(recon, 'rutacertificado', None) and recon.rutacertificado.strip():
+            try:
+                from apps.trayectoria.views import _download_blob_from_url
+                cert_data, filename = _download_blob_from_url(recon.rutacertificado)
+                
+                # Si es PDF, agregar título en overlay y luego el certificado
+                if filename.lower().endswith('.pdf'):
+                    try:
+                        # Agregar título al certificado
+                        title_text = f"Certificado de Reconocimiento - {recon.nombrereconocimiento}"
+                        cert_with_title = _add_title_to_certificate(cert_data, title_text)
+                        
+                        # Agregar certificado con título
+                        cert_reader = PdfReader(io.BytesIO(cert_with_title))
+                        for page in cert_reader.pages:
+                            pdf_writer.add_page(page)
+                        certificados_count += 1
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+
+    # Escribir PDF combinado a buffer
+    output_buffer = io.BytesIO()
+    pdf_writer.write(output_buffer)
+    output_buffer.seek(0)
+
+    # Enviar PDF único
+    response = HttpResponse(output_buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="CV_Completo_{perfil.nombres}_{perfil.apellidos}.pdf"'
+    return response
+
+
+def venta_garage(request):
+    """Display all garage sales/products."""
+    perfil = DatosPersonales.objects.filter(perfilactivo=1).first()
+    if not perfil:
+        from datetime import date
+        try:
+            perfil = DatosPersonales.objects.create(
+                nombres="Perfil",
+                apellidos="Predeterminado",
+                descripcionperfil="Perfil por defecto",
+                perfilactivo=1,
+                nacionalidad="Colombia",
+                lugarnacimiento="Bogotá",
+                fechanacimiento=date.today(),
+                numerocedula="1234567890",
+                sexo="H",
+                estadocivil="Soltero",
+                licenciaconducir="B1",
+                telefonoconvencional="3001234567",
+                telefonofijo="6012345678",
+                direcciontrabajo="Calle 123",
+                direcciondomiciliaria="Carrera 456",
+                sitioweb="https://example.com"
+            )
+        except Exception:
+            pass
+
+    ventas_garage = VentaGarage.objects.filter(
+        idperfilconqueestaactivo=perfil,
+        activarparaqueseveaenfront=True,
+    ).order_by('-idventagarage')
+
+    context = {
+        'perfil': perfil,
+        'ventas_garage': ventas_garage,
+    }
+
+    return render(request, 'perfil/venta_garage.html', context)

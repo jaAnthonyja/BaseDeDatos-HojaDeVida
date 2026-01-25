@@ -100,6 +100,14 @@ class VentaGarage(models.Model):
     descripcion = models.CharField(max_length=100, db_column='descripcion', null=True, blank=True)
     valordelbien = models.DecimalField(max_digits=5, decimal_places=2, db_column='valordelbien', null=True, blank=True)
     activarparaqueseveaenfront = models.BooleanField(default=True, db_column='activarparaqueseveaenfront')
+    
+    # Nuevos campos
+    DISPONIBILIDAD_CHOICES = [
+        ('Disponible', 'Disponible'),
+        ('Vendido', 'Vendido'),
+    ]
+    disponibilidad = models.CharField(max_length=20, choices=DISPONIBILIDAD_CHOICES, default='Disponible', db_column='disponibilidad', null=True, blank=True)
+    fecha_publicacion = models.DateField(auto_now_add=True, db_column='fecha_publicacion', null=True, blank=True)
 
     class Meta:
         db_table = 'VENTAGARAGE'

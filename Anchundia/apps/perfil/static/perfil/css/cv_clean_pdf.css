@@ -1,0 +1,487 @@
+/* PDF-only stylesheet - Estilo PROFESIONAL EMPRESARIAL MODERNO
+   - A4 with 15mm margins
+   - Paleta profesional: Naranja/Rojo + Gris + Blanco
+   - Sidebar izquierdo destacado con foto
+   - Compatible con WeasyPrint
+*/
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+@page {
+    size: A4;
+    margin: 0;
+    background: #ffffff;
+}
+
+/* Variables PROFESIONALES - Tema Empresarial Moderno */
+:root {
+    /* Colores primarios */
+    --primary-orange: #ff6b35;    /* Naranja/Rojo principal */
+    --primary-dark: #e55100;      /* Naranja oscuro */
+    --primary-light: #ff8c5a;     /* Naranja claro */
+    
+    /* Colores complementarios */
+    --white: #ffffff;
+    --gray-dark: #2c3e50;
+    --gray-medium: #34495e;
+    --gray-light: #7f8c8d;
+    --gray-lighter: #ecf0f1;
+    
+    /* Texto */
+    --text-dark: #2c3e50;
+    --text-light: #ffffff;
+    --text-secondary: #7f8c8d;
+}
+
+html, body {
+    font-family: 'Calibri', 'Segoe UI', sans-serif;
+    font-size: 10pt;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background: var(--white);
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* Page container */
+.cv-page {
+    width: 210mm;
+    height: 297mm;
+    background: var(--white);
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+/* SIDEBAR IZQUIERDO - Naranja con contenido destacado */
+.cv-sidebar-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 35%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff6b35 0%, #e55100 100%);
+    z-index: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.cv-sidebar {
+    position: relative;
+    width: 35%;
+    background: transparent;
+    padding: 30px 25px;
+    color: var(--text-light);
+    z-index: 1;
+    min-height: 297mm;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* CONTENIDO PRINCIPAL - Lado derecho */
+.cv-main {
+    width: 65%;
+    margin-left: 35%;
+    padding: 30px 28px;
+    background: var(--white);
+    min-height: 297mm;
+}
+
+/* Header */
+.cv-header {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.full-name {
+    font-size: 24pt;
+    font-weight: 900;
+    color: var(--gray-dark);
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profession {
+    font-size: 12pt;
+    color: var(--primary-orange);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+
+/* Foto de perfil en sidebar */
+.photo-container {
+    text-align: center;
+    margin-bottom: 25px;
+    order: -1;
+}
+
+.profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 4px solid var(--white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.profile-photo.placeholder {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, var(--white), var(--gray-lighter));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32pt;
+    color: var(--primary-orange);
+    border: 4px solid var(--white);
+    border-radius: 8px;
+}
+
+/* SIDEBAR SECTIONS */
+.sidebar-section {
+    margin-bottom: 0;
+}
+
+.sidebar-title {
+    font-size: 11pt;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+    padding-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info-item {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 9pt;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-label {
+    font-size: 7pt;
+    color: rgba(255, 255, 255, 0.85);
+    display: block;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    opacity: 0.95;
+}
+
+.info-value {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.4;
+}
+
+.info-link {
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* MAIN CONTENT SECTIONS */
+.main-section {
+    margin-bottom: 22px;
+    page-break-inside: avoid;
+}
+
+.main-section:not(:first-of-type) {
+    border-top: 1px solid var(--gray-lighter);
+    padding-top: 18px;
+}
+
+.section-header {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-orange);
+}
+
+.section-title {
+    font-size: 13pt;
+    font-weight: 900;
+    color: var(--primary-orange);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.section-icon {
+    margin-right: 8px;
+}
+
+/* Cards */
+.experience-card,
+.education-card,
+.award-card,
+.product-card,
+.garage-card {
+    page-break-inside: avoid;
+    background: transparent;
+    border: none;
+    border-left: 3px solid var(--primary-orange);
+    border-radius: 0;
+    padding: 12px 0 12px 15px;
+    margin-bottom: 12px;
+    box-shadow: none;
+}
+
+.company-name,
+.position-title,
+.course-title,
+.award-title,
+.product-title,
+.education-degree {
+    font-size: 11pt;
+    font-weight: 900;
+    color: var(--gray-dark);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-header {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.date-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 8pt;
+    font-weight: 600;
+    border-radius: 0;
+    border: none;
+    margin-bottom: 4px;
+    font-style: italic;
+}
+
+.location-tag {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.institution-name {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.description-text {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text-dark);
+    margin-top: 6px;
+}
+
+.hours-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: transparent;
+    color: var(--primary-orange);
+    font-size: 8pt;
+    font-weight: 700;
+    border-radius: 0;
+    border: none;
+}
+
+.award-type {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--gray-lighter);
+    color: var(--primary-orange);
+    font-size: 8pt;
+    font-weight: 700;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.award-meta,
+.garage-meta {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.award-entity,
+.award-date,
+.product-date {
+    font-size: 9pt;
+    color: var(--text-secondary);
+}
+
+.product-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--gray-lighter);
+    color: var(--primary-orange);
+    font-size: 8pt;
+    font-weight: 700;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--gray-lighter);
+    color: var(--primary-orange);
+    font-size: 8pt;
+    font-weight: 700;
+    border-radius: 3px;
+    margin-right: 8px;
+}
+
+.price-tag {
+    display: inline-block;
+    padding: 5px 10px;
+    background: var(--primary-orange);
+    color: var(--white);
+    font-size: 10pt;
+    font-weight: 900;
+    border-radius: 3px;
+}
+
+/* Contact grid */
+.contact-grid {
+    display: block;
+    margin-top: 8px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.contact-item {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 9pt;
+    line-height: 1.4;
+}
+
+.contact-text,
+.contact-link {
+    color: var(--text-secondary);
+    font-size: 9pt;
+}
+
+/* Hide non-print elements */
+.btn,
+.btn-admin,
+.btn-cert,
+.btn-action,
+.action-buttons,
+.cert-actions,
+.no-print {
+    display: none !important;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    page-break-after: avoid;
+    widows: 2;
+    orphans: 2;
+}
+
+/* Print adjustments */
+@media print {
+    body {
+        background: var(--white);
+        padding: 0;
+        margin: 0;
+    }
+    .cv-page {
+        margin: 0;
+        padding: 0;
+        page-break-after: always;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .cv-sidebar-bg {
+        position: fixed;
+    }
+}
+
+/* Certificate pages */
+.certificate-page {
+    page-break-before: always;
+    page-break-after: always;
+    width: 100%;
+    height: 297mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15mm;
+    background: var(--white);
+}
+
+.certificate-wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+.certificate-title {
+    font-size: 20pt;
+    font-weight: 900;
+    color: var(--primary-orange);
+    margin-bottom: 22px;
+    text-transform: uppercase;
+}
+
+.certificate-frame {
+    width: 100%;
+    max-width: 180mm;
+    margin: 0 auto;
+    border: 2px solid var(--primary-orange);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.certificate-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.first-page-only {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+}
+
+/* End of PDF stylesheet */
