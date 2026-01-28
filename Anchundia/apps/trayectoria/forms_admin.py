@@ -1,7 +1,7 @@
 """Static admin forms for trayectoria models. Safe and non-invasive."""
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from .models import CursoRealizado, Reconocimiento, ExperienciaLaboral, VentaGarage
+from .models import CursoRealizado, Reconocimiento, ExperienciaLaboral, VentaGarage, ProductoLaboral
 from datetime import date
 
 
@@ -159,5 +159,26 @@ class VentaGarageAdminForm(forms.ModelForm):
         # Validar que valordelbien no sea negativo
         if valordelbien is not None and valordelbien < 0:
             raise forms.ValidationError('Error: El valor del bien no puede ser negativo')
+        
+        return cleaned_data
+
+
+class ProductoLaboralAdminForm(forms.ModelForm):
+    """Form for ProductoLaboral in Django Admin."""
+
+    class Meta:
+        model = ProductoLaboral
+        fields = '__all__'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fechaproducto = cleaned_data.get('fechaproducto')
+        
+        # Validar rango de fechas: desde 1981 hasta enero 2026
+        if fechaproducto:
+            min_date = date(1981, 1, 1)
+            max_date = date(2026, 1, 31)
+            if fechaproducto < min_date or fechaproducto > max_date:
+                raise forms.ValidationError('Error: Vuelva a ingresar las fechas')
         
         return cleaned_data

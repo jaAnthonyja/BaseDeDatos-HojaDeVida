@@ -8,7 +8,7 @@ from .models import (
     ProductoLaboral,
     VentaGarage,
 )
-from .forms_admin import CursoRealizadoAdminForm, ReconocimientoAdminForm, ExperienciaLaboralAdminForm, VentaGarageAdminForm
+from .forms_admin import CursoRealizadoAdminForm, ReconocimientoAdminForm, ExperienciaLaboralAdminForm, VentaGarageAdminForm, ProductoLaboralAdminForm
 from .services.azure_storage import upload_pdf, upload_image
 
 
@@ -65,6 +65,7 @@ class ProductoAcademicoAdmin(admin.ModelAdmin):
 
 @admin.register(ProductoLaboral)
 class ProductoLaboralAdmin(admin.ModelAdmin):
+    form = ProductoLaboralAdminForm
     list_display = ('nombreproducto', 'fechaproducto', 'activarparaqueseveaenfront')
 
 
