@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from apps.perfil.models import DatosPersonales
 
 
@@ -50,7 +51,7 @@ class CursoRealizado(models.Model):
     nombrecurso = models.CharField(max_length=100, db_column='nombrecurso', null=True, blank=True)
     fechainicio = models.DateField(db_column='fechainicio', null=True, blank=True)
     fechafin = models.DateField(db_column='fechafin', null=True, blank=True)
-    totalhoras = models.IntegerField(db_column='totalhoras', null=True, blank=True)
+    totalhoras = models.IntegerField(db_column='totalhoras', null=True, blank=True, validators=[MinValueValidator(0)])
     descripcioncurso = models.CharField(max_length=100, db_column='descripcioncurso', null=True, blank=True)
     entidadpatrocinadora = models.CharField(max_length=100, db_column='entidadpatrocinadora', null=True, blank=True)
     nombrecontactoauspicia = models.CharField(max_length=100, db_column='nombrecontactoauspicia', null=True, blank=True)
@@ -98,7 +99,7 @@ class VentaGarage(models.Model):
     ]
     estadoproducto = models.CharField(max_length=40, choices=ESTADO_CHOICES, db_column='estadoproducto', null=True, blank=True)
     descripcion = models.CharField(max_length=100, db_column='descripcion', null=True, blank=True)
-    valordelbien = models.DecimalField(max_digits=5, decimal_places=2, db_column='valordelbien', null=True, blank=True)
+    valordelbien = models.DecimalField(max_digits=5, decimal_places=2, db_column='valordelbien', null=True, blank=True, validators=[MinValueValidator(0)])
     activarparaqueseveaenfront = models.BooleanField(default=True, db_column='activarparaqueseveaenfront')
     
     # Nuevos campos

@@ -29,6 +29,7 @@ class CursoRealizadoAdminForm(forms.ModelForm):
         cleaned_data = super().clean()
         fecha_inicio = cleaned_data.get('fechainicio')
         fecha_fin = cleaned_data.get('fechafin')
+        totalhoras = cleaned_data.get('totalhoras')
         
         # Validar que fecha inicio no sea mayor a fecha fin
         if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
@@ -41,6 +42,10 @@ class CursoRealizadoAdminForm(forms.ModelForm):
             raise forms.ValidationError('Error: Vuelva a ingresar las fechas')
         if fecha_fin and fecha_fin > max_date:
             raise forms.ValidationError('Error: Vuelva a ingresar las fechas')
+        
+        # Validar que totalhoras no sea negativo
+        if totalhoras is not None and totalhoras < 0:
+            raise forms.ValidationError('Error: Las horas no pueden ser negativas')
         
         return cleaned_data
 
@@ -146,3 +151,13 @@ class VentaGarageAdminForm(forms.ModelForm):
             raise forms.ValidationError(_('El archivo debe ser una imagen válida'))
         
         return f
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        valordelbien = cleaned_data.get('valordelbien')
+        
+        # Validar que valordelbien no sea negativo
+        if valordelbien is not None and valordelbien < 0:
+            raise forms.ValidationError('Error: El valor del bien no puede ser negativo')
+        
+        return cleaned_data

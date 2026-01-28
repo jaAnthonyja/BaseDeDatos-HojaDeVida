@@ -1,10 +1,11 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 
 class DatosPersonales(models.Model):
     idperfil = models.AutoField(primary_key=True, db_column='idperfil')
     descripcionperfil = models.CharField(max_length=50, db_column='descripcionperfil')
-    perfilactivo = models.IntegerField(db_column='perfilactivo')
+    perfilactivo = models.IntegerField(db_column='perfilactivo', validators=[MinValueValidator(0)])
     apellidos = models.CharField(max_length=60, db_column='apellidos')
     nombres = models.CharField(max_length=60, db_column='nombres')
     nacionalidad = models.CharField(max_length=20, db_column='nacionalidad')
