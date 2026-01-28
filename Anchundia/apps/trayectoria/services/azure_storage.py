@@ -48,3 +48,49 @@ def upload_pdf(file_obj, filename=None):
 
     # Construct URL
     return blob_client.url
+
+
+def upload_image(file_obj, filename=None):
+    """Upload an image file to Azure Blob Storage and return the blob URL.
+
+    - file_obj: file-like object (e.g., Django UploadedFile or BytesIO)
+    - filename: optional desired filename (if None, use uuid + original name)
+
+    Returns the public URL to the uploaded blob (container must allow public access).
+    Raises RuntimeError on configuration errors or upload failures.
+    """
+    container_client = _get_container_client()
+
+    if filename:
+        base_name = filename
+    else:
+        base_name = getattr(file_obj, 'name', None) or 'image'
+
+    ext = os.path.splitext(base_name)[1] or '.jpg'
+    blob_name = f"venta_garage/{uuid.uuid4().hex}{ext}"
+
+    blob_client = container_client.get_blob_client(blob_name)
+
+    # Determine content type based on file extension
+    content_type_map = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp',
+    }
+    content_type = content_type_map.get(ext.lower(), 'image/jpeg')
+
+    # Upload
+    try:
+        # If file_obj has chunks() (UploadedFile), read it accordingly
+        if hasattr(file_obj, 'chunks'):
+            data = b''.join(chunk for chunk in file_obj.chunks())
+        else:
+            data = file_obj.read()
+        blob_client.upload_blob(data, overwrite=True, content_type=content_type)
+    except Exception as exc:
+        raise RuntimeError(f'Failed to upload image blob: {exc}')
+
+    # Construct URL
+    return blob_client.url

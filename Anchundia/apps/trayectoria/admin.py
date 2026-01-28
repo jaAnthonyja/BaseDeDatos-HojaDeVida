@@ -8,8 +8,8 @@ from .models import (
     ProductoLaboral,
     VentaGarage,
 )
-from .forms_admin import CursoRealizadoAdminForm, ReconocimientoAdminForm, ExperienciaLaboralAdminForm
-from .services.azure_storage import upload_pdf
+from .forms_admin import CursoRealizadoAdminForm, ReconocimientoAdminForm, ExperienciaLaboralAdminForm, VentaGarageAdminForm
+from .services.azure_storage import upload_pdf, upload_image
 
 
 @admin.register(ExperienciaLaboral)
@@ -70,5 +70,38 @@ class ProductoLaboralAdmin(admin.ModelAdmin):
 
 @admin.register(VentaGarage)
 class VentaGarageAdmin(admin.ModelAdmin):
+    form = VentaGarageAdminForm
     list_display = ('nombreproducto', 'disponibilidad', 'fecha_publicacion', 'activarparaqueseveaenfront')
-    readonly_fields = ('fecha_publicacion',)
+    readonly_fields = ('fecha_publicacion', 'rutaimagen')
+    
+    fieldsets = (
+        ('Información del Producto', {
+            'fields': ('idperfilconqueestaactivo', 'nombreproducto', 'estadoproducto', 
+                      'descripcion', 'valordelbien', 'disponibilidad')
+        }),
+        ('Imagen', {
+            'fields': ('imagen_subir', 'rutaimagen'),
+            'description': 'Carga una imagen del producto. Se subirá automáticamente a Azure.'
+        }),
+        ('Configuración', {
+            'fields': ('activarparaqueseveaenfront', 'fecha_publicacion')
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        """Manejar la subida de imagen a Azure."""
+        # Obtener la imagen del formulario
+        uploaded_image = form.cleaned_data.get('imagen_subir')
+        
+        if uploaded_image:
+            try:
+                # Subir a Azure y guardar URL
+                image_url = upload_image(uploaded_image, filename=uploaded_image.name)
+                obj.rutaimagen = image_url
+                messages.success(request, f'✅ Imagen "{uploaded_image.name}" subida a Azure exitosamente')
+            except Exception as exc:
+                messages.error(request, f'❌ Error al subir imagen a Azure: {str(exc)}')
+                # Continuar guardando el objeto sin imagen
+        
+        # Guardar el objeto
+        super().save_model(request, obj, form, change)

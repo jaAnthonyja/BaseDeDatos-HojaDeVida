@@ -108,6 +108,14 @@ class VentaGarage(models.Model):
     ]
     disponibilidad = models.CharField(max_length=20, choices=DISPONIBILIDAD_CHOICES, default='Disponible', db_column='disponibilidad', null=True, blank=True)
     fecha_publicacion = models.DateField(auto_now_add=True, db_column='fecha_publicacion', null=True, blank=True)
+    
+    # URL segura de la imagen almacenada en Azure Blob Storage
+    rutaimagen = models.URLField(
+        null=True,
+        blank=True,
+        db_column='rutaimagen',
+        help_text='URL segura de la imagen del producto almacenada en Azure'
+    )
 
     class Meta:
         db_table = 'VENTAGARAGE'

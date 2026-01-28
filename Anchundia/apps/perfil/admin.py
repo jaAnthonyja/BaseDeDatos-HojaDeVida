@@ -31,9 +31,12 @@ class DatosPersonalesAdminForm(forms.ModelForm):
         cleaned_data = super().clean()
         fecha_nacimiento = cleaned_data.get('fechanacimiento')
         
-        # Validar que fecha de nacimiento no sea mayor a 2026
-        if fecha_nacimiento and fecha_nacimiento.year > 2026:
-            raise ValidationError('Error: Vuelva a ingresar las fechas')
+        # Validar rango de fechas: desde 1981 hasta enero 2026
+        if fecha_nacimiento:
+            min_date = date(1981, 1, 1)
+            max_date = date(2026, 1, 31)
+            if fecha_nacimiento < min_date or fecha_nacimiento > max_date:
+                raise ValidationError('Error: Vuelva a ingresar las fechas')
         
         return cleaned_data
 

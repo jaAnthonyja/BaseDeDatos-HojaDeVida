@@ -60,25 +60,25 @@
                 <!-- NAVIGATION BAR -->
                 <div class="section-nav">
                     {% if mostrar_experiencia %}
-                        <a href="#experiencia" class="section-nav-btn">Experiencia Laboral</a>
+                        <button onclick="mostrarSeccion('experiencia')" class="section-nav-btn">Experiencia Laboral</button>
                     {% endif %}
                     {% if mostrar_cursos %}
-                        <a href="#educacion" class="section-nav-btn">Educación y Cursos</a>
+                        <button onclick="mostrarSeccion('educacion')" class="section-nav-btn">Educación y Cursos</button>
                     {% endif %}
                     {% if mostrar_reconocimientos %}
-                        <a href="#reconocimientos" class="section-nav-btn">Reconocimientos</a>
+                        <button onclick="mostrarSeccion('reconocimientos')" class="section-nav-btn">Reconocimientos</button>
                     {% endif %}
                     {% if mostrar_productos_laborales %}
-                        <a href="#productos-laborales" class="section-nav-btn">Productos Laborales</a>
+                        <button onclick="mostrarSeccion('productos-laborales')" class="section-nav-btn">Productos Laborales</button>
                     {% endif %}
                     {% if mostrar_productos_academicos %}
-                        <a href="#productos-academicos" class="section-nav-btn">Productos Académicos</a>
+                        <button onclick="mostrarSeccion('productos-academicos')" class="section-nav-btn">Productos Académicos</button>
                     {% endif %}
                 </div>
 
                 <!-- EXPERIENCIA LABORAL -->
                 {% if experiencias_qs.exists and mostrar_experiencia %}
-                    <section id="experiencia" class="main-section">
+                    <section id="experiencia" class="main-section cv-section active">
                         <div class="section-header">
                             <div class="section-icon">💼</div>
                             <h2 class="section-title">Experiencia Laboral</h2>
@@ -161,7 +161,7 @@
 
                 <!-- EDUCACIÓN Y CURSOS -->
                 {% if cursos.exists and mostrar_cursos %}
-                    <section id="educacion" class="main-section">
+                    <section id="educacion" class="main-section cv-section">
                         <div class="section-header">
                             <div class="section-icon">🎓</div>
                             <h2 class="section-title">Educación y Cursos</h2>
@@ -237,7 +237,7 @@
 
                 <!-- RECONOCIMIENTOS -->
                 {% if reconocimientos.exists and mostrar_reconocimientos %}
-                    <section id="reconocimientos" class="main-section">
+                    <section id="reconocimientos" class="main-section cv-section">
                         <div class="section-header">
                             <div class="section-icon">🏆</div>
                             <h2 class="section-title">Reconocimientos</h2>
@@ -297,7 +297,7 @@
 
                 <!-- PRODUCTOS ACADÉMICOS -->
                 {% if productos_academicos.exists and mostrar_productos_academicos %}
-                    <section id="productos-academicos" class="main-section">
+                    <section id="productos-academicos" class="main-section cv-section">
                         <div class="section-header">
                             <div class="section-icon">📚</div>
                             <h2 class="section-title">Productos Académicos</h2>
@@ -322,7 +322,7 @@
 
                 <!-- PRODUCTOS LABORALES -->
                 {% if productos_laborales.exists and mostrar_productos_laborales %}
-                    <section id="productos-laborales" class="main-section">
+                    <section id="productos-laborales" class="main-section cv-section">
                         <div class="section-header">
                             <div class="section-icon">🔧</div>
                             <h2 class="section-title">Productos Laborales</h2>
@@ -517,5 +517,65 @@
             </div>
         {% endfor %}
     {% endif %}
+
+    <style>
+        /* Sistema de vistas por secciones */
+        .cv-section {
+            display: none;
+        }
+
+        .cv-section.active {
+            display: block;
+        }
+
+        /* Botones de navegación */
+        .section-nav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px 16px;
+            margin: 4px 8px 4px 0;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            background-color: #ecf0f1;
+        }
+
+        .section-nav-btn:hover {
+            background-color: #d5dbdb;
+            transform: translateY(-2px);
+        }
+
+        .section-nav-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+
+    <script>
+        function mostrarSeccion(seccionId) {
+            // Ocultar todas las secciones
+            const secciones = document.querySelectorAll('.cv-section');
+            secciones.forEach(seccion => {
+                seccion.classList.remove('active');
+            });
+
+            // Mostrar la sección seleccionada
+            const seccionSeleccionada = document.getElementById(seccionId);
+            if (seccionSeleccionada) {
+                seccionSeleccionada.classList.add('active');
+            }
+        }
+
+        // Al cargar la página, mostrar la primera sección (Experiencia Laboral)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Buscar la primera sección disponible
+            const primeraSeccion = document.querySelector('.cv-section');
+            if (primeraSeccion) {
+                primeraSeccion.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>

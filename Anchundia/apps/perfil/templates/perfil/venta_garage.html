@@ -59,14 +59,34 @@
             background: #f9f9f9;
             border: 2px solid #e8f5e9;
             border-left: 5px solid #27ae60;
-            padding: 20px;
-            border-radius: 6px;
+            padding: 0;
+            border-radius: 8px;
             transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .garage-card:hover {
-            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.15);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(30, 132, 73, 0.2);
+            transform: translateY(-4px);
+        }
+
+        .garage-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            background-color: #e8e8e8;
+            border-bottom: 1px solid #e8f5e9;
+        }
+
+        .garage-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .product-title {
@@ -74,6 +94,7 @@
             font-size: 18px;
             margin-bottom: 12px;
             font-weight: 600;
+            line-height: 1.3;
         }
 
         .garage-meta {
@@ -81,6 +102,7 @@
             gap: 10px;
             margin-bottom: 12px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .status-badge {
@@ -107,12 +129,14 @@
             color: #555;
             font-size: 14px;
             line-height: 1.5;
+            margin-top: 8px;
+            flex-grow: 1;
         }
 
         .publication-date {
             color: #27ae60;
             font-size: 13px;
-            margin: 10px 0;
+            margin: 10px 0 0 0;
             font-weight: 500;
         }
 
@@ -163,28 +187,35 @@
                 <div class="garage-grid">
                     {% for venta in ventas_garage %}
                         <div class="garage-card">
-                            {% if venta.nombreproducto %}
-                                <h4 class="product-title">{{ venta.nombreproducto }}</h4>
+                            {% if venta.rutaimagen %}
+                                <img src="{% url 'ver_imagen_venta_garage' venta.idventagarage %}" alt="{{ venta.nombreproducto }}" class="garage-image" loading="lazy">
+                            {% else %}
+                                <div style="width: 100%; height: 250px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;"></div>
                             {% endif %}
-                            <div class="garage-meta">
-                                {% if venta.estadoproducto %}
-                                    <span class="status-badge">{{ venta.estadoproducto }}</span>
+                            <div class="garage-content">
+                                {% if venta.nombreproducto %}
+                                    <h4 class="product-title">{{ venta.nombreproducto }}</h4>
                                 {% endif %}
-                                {% if venta.disponibilidad %}
-                                    <span class="availability-badge" style="background-color: {% if venta.disponibilidad == 'Disponible' %}#27ae60{% else %}#e74c3c{% endif %};">
-                                        {{ venta.disponibilidad }}
-                                    </span>
+                                <div class="garage-meta">
+                                    {% if venta.estadoproducto %}
+                                        <span class="status-badge">{{ venta.estadoproducto }}</span>
+                                    {% endif %}
+                                    {% if venta.disponibilidad %}
+                                        <span class="availability-badge" style="background-color: {% if venta.disponibilidad == 'Disponible' %}#27ae60{% else %}#e74c3c{% endif %};">
+                                            {{ venta.disponibilidad }}
+                                        </span>
+                                    {% endif %}
+                                    {% if venta.valordelbien %}
+                                        <span class="price-tag">${{ venta.valordelbien }}</span>
+                                    {% endif %}
+                                </div>
+                                {% if venta.fecha_publicacion %}
+                                    <p class="publication-date">📅 Publicado: {{ venta.fecha_publicacion|date:"d/m/Y" }}</p>
                                 {% endif %}
-                                {% if venta.valordelbien %}
-                                    <span class="price-tag">${{ venta.valordelbien }}</span>
+                                {% if venta.descripcion %}
+                                    <p class="description-text">{{ venta.descripcion }}</p>
                                 {% endif %}
                             </div>
-                            {% if venta.fecha_publicacion %}
-                                <p class="publication-date">📅 Publicado: {{ venta.fecha_publicacion|date:"d/m/Y" }}</p>
-                            {% endif %}
-                            {% if venta.descripcion %}
-                                <p class="description-text">{{ venta.descripcion }}</p>
-                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

@@ -382,15 +382,17 @@ html {
     flex-wrap: nowrap;
     padding: 0;
     width: 100%;
+    /* Ajuste fino: mover la barra 5mm más a la derecha */
+    margin-left: -1.45cm;
     justify-content: flex-start;
 }
 
 .section-nav-btn {
-    padding: 5px 8px;
-    font-size: 7.5pt;
+    padding: 2px 4px;
+    font-size: 5pt;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     border: 1px solid var(--primary-green);
     color: var(--primary-green);
     background: transparent;
@@ -400,6 +402,7 @@ html {
     cursor: pointer;
     white-space: nowrap;
     flex: 0 1 auto;
+    line-height: 1;
 }
 
 .section-nav-btn:hover,

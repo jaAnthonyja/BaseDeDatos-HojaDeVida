@@ -702,6 +702,44 @@ def ver_foto_perfil(request):
     return resp
 
 
+def ver_imagen_venta_garage(request, venta_id):
+    """Proxy view to serve venta garage image from Azure without exposing the blob URL."""
+    from apps.trayectoria.models import VentaGarage
+    
+    try:
+        venta = VentaGarage.objects.get(idventagarage=venta_id)
+    except VentaGarage.DoesNotExist:
+        return HttpResponse('Venta de garage no encontrada.', status=404)
+    
+    blob_url = getattr(venta, 'rutaimagen', None)
+    if not blob_url:
+        return HttpResponse('Imagen no disponible.', status=404)
+
+    # Try to download from Azure
+    try:
+        data, filename = _download_blob_from_url(blob_url)
+    except Exception:
+        # Fallback: try a direct HTTP fetch (works for public URLs or SAS URLs).
+        try:
+            from urllib.request import urlopen
+            from urllib.parse import urlparse
+
+            resp_fetch = urlopen(blob_url)
+            data = resp_fetch.read()
+            filename = os.path.basename(urlparse(blob_url).path) or 'image.jpg'
+        except Exception as exc:
+            return HttpResponse(f'Error fetching image: {exc}', status=500)
+
+    # Guess mime type from filename; default to JPEG
+    mime, _ = mimetypes.guess_type(filename)
+    if not mime:
+        mime = 'image/jpeg'
+
+    resp = HttpResponse(data, content_type=mime)
+    resp['Content-Disposition'] = f'inline; filename="{filename}"'
+    return resp
+
+
 def seleccionar_secciones_cv(request):
     """Mostrar pantalla para seleccionar qué secciones incluir en el PDF."""
     return render(request, 'perfil/seleccionar_secciones_cv.html')
