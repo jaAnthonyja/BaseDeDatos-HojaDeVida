@@ -121,9 +121,11 @@ body {
     flex-shrink: 0;
     display: flex;
     gap: 10px;
-    align-items: flex-start;
-    white-space: nowrap;
+    align-items: flex-end;
     flex-direction: column;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: normal; /* ✅ permite salto de línea */
 }
 
 .header-top-row {
@@ -133,12 +135,12 @@ body {
 }
 
 .header-bottom-row {
-    display: flex;
+   display: flex;
     gap: 10px;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap;       /* ✅ AÑADIR */
+    max-width: 100%;
 }
-
 .btn-action-header {
     display: inline-flex;
     align-items: center;
@@ -388,17 +390,17 @@ html {
 }
 
 .section-nav-btn {
-    padding: 2px 4px;
-    font-size: 5pt;
-    font-weight: 700;
+    padding: 0.5px 2px;        /* ⬇️⬇️ contenedor ultra pequeño */
+    font-size: 3.6pt;          /* ⬇️⬇️ letra MUY pequeña */
+    font-weight: 500;          /* más ligera */
     text-transform: uppercase;
-    letter-spacing: 0.2px;
-    border: 1px solid var(--primary-green);
+    letter-spacing: 0.05px;    /* casi nada de espacio */
+    border: 0.8px solid var(--primary-green);
     color: var(--primary-green);
     background: transparent;
     border-radius: 2px;
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.2s ease;
     cursor: pointer;
     white-space: nowrap;
     flex: 0 1 auto;
